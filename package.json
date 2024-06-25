@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "express": "^4.19.2",
-    "learn1428": "^1.0.1"
+    "learn1428": "^1.0.1",
+    "mongodb": "^6.7.0",
+    "nodemon": "^3.1.4"
   }
 }
