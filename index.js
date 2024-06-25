@@ -37,7 +37,7 @@ app.get('/users', async (req, res) => {
     for(let i=0;i<result.length;i++){
         ans.push(result[i].name);
     }
-
+        console.log("Got it!");
     res.json(ans);
   } catch (error) {
     console.error("Error fetching users:", error);
