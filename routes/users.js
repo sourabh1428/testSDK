@@ -28,7 +28,7 @@ connectToMongoDB();
 router.get('/users', async (req, res) => {
   try {
     const db = client.db('test_db');
-    const collection = db.collection('campaigns');
+    const collection = db.collection('users');
     const result = await collection.find({}).limit(100).toArray();
     let ans=[];
     for(let i=0;i<result.length;i++){

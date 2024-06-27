@@ -1,3 +1,5 @@
+const { default: axios } = require("axios");
+
 async function getAllUsers() {
     try {
       const response = await fetch("https://testsdk.onrender.com/users"); // Ensure http:// is specified
@@ -11,12 +13,28 @@ async function getAllUsers() {
     }
   }
   
+  // to post the users 
   
+  async function postUsers(name,email,ID){
+    try {
+      const response = await axios.post("https://testsdk.onrender.com/postUser", {
+        name: name,
+        email: email,
+        ID: ID
+      });
+  
+      console.log("User added successfully:", response.data);
+    } catch (error) {
+      console.error("Error posting user:", error);
+    }
+  }
+  
+  // Usage example:
 
 
-  getAllUsers();
+
 
   
   
   
-  module.exports=getAllUsers;
+  module.exports={getAllUsers,postUsers};
