@@ -1,6 +1,6 @@
 async function getAllUsers() {
     try {
-      const response = await fetch("http://localhost:3000/users"); // Ensure http:// is specified
+      const response = await fetch("https://testsdk.onrender.com/users"); // Ensure http:// is specified
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -11,6 +11,9 @@ async function getAllUsers() {
     }
   }
   
+  
+
+
   getAllUsers();
 
   
