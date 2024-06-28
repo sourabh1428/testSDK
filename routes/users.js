@@ -42,6 +42,7 @@ router.get('/users', async (req, res) => {
   }
 });
 
+
 router.post('/postUser', async (req, res) => {
     try {
              const userData = req.body;
@@ -64,7 +65,6 @@ router.post('/postUser', async (req, res) => {
         res.status(500).json({ error: "Failed to post user" });
       }
 });
-
 
 
 
