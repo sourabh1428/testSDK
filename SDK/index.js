@@ -33,7 +33,7 @@ async function viewedPageEvent(MMID, eventName) {
             MMID: MMID,
             eventName: eventName
         });
-        return response.data;
+        console.log(response.data);
     } catch (error) {
         console.log(error);
     }
@@ -42,7 +42,7 @@ async function viewedPageEvent(MMID, eventName) {
 async function getUserEvents(MMID) {
     try {
         const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`);
-        return response.data;
+        console.log(response.data);
     } catch (error) {
         console.log(error);
     }
