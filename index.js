@@ -13,11 +13,12 @@ const routes = require('./routes/users.js');
 
 const eventRoutes=require('./routes/events.js');
 
-
+const campaignRoutes = require('./routes/campaign.js');
 
 // Use routes
 app.use('/', routes);
 app.use('/events', eventRoutes);
+app.use('/campaigns', campaignRoutes);
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
