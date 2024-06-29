@@ -54,7 +54,7 @@ router.post('/viewedPage', async function (req, res) {
         // Insert the event into the viewed_page collection
         await collection.insertOne(userEventDone);
 
-        console.log("User event inserted:");
+        console.log("User event inserted: ", user);
         res.status(201).json({ message: "Event added successfully to backend" });
     } catch (error) {
         console.log(error);
