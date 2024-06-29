@@ -117,7 +117,7 @@ router.post('/UIS/:segment_id', async (req, res) => {
             { $set: { users: ans } }
         );
        
-        if(updateResult.acknowledged===true)res.send("success");
+        if(updateResult.acknowledged===true)res.send(ans);
         else{
             res.send("failed")
         }
