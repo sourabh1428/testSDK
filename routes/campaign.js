@@ -66,7 +66,7 @@ router.post('/postCampaign', async (req, res) => {
         
     }
 
-        res.send("Campaign added successfully");
+        res.json(campaignData.segment_id);
     } catch (e) {
         console.log("Error:", e);
         res.status(500).json({ "message": "Error adding campaign" });
