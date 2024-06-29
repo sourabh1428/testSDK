@@ -54,10 +54,8 @@ async function getAllCampaigns(){
     try{
 
         const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign");
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const campaigns = await response.json();
+    
+        const campaigns = await response.data;
         console.log(campaigns);
         return campaigns;
 
@@ -67,21 +65,18 @@ async function getAllCampaigns(){
     }
 }
 
-async function postCampaign(type){
-    if(typeof type === String){
+async function postCampaign(type,event){
+  
     try{
 
 
         const response = await axios.post("https://testsdk.onrender.com/campaigns/postCampaign",{
             type:type
         });
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
+       
 
-        let users=await UIS(response);
-        const campaigns = await response.json();
+        let users=await UIS(response.data);
+        const campaigns = await response.data;
         console.log("Campaign created successfully",users);
         return campaigns;
 
@@ -89,8 +84,8 @@ async function postCampaign(type){
     }catch(error){
         console.log(error);
     }
-}
-console.log("Type should be string");
+
+
 
 }
 
@@ -98,21 +93,20 @@ console.log("Type should be string");
 //              /UIS/:segment_id
 
 async function UIS(segment_id){
-
+    console.log("UIS----------------------------------------------------------------");
+    console.log(segment_id , "--------------------------------");
     try{
 
-        const response = await axios.get(`https://testsdk.onrender.com/campaigns/UIS/:${segment_id}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const campaigns = await response.json();
+        const response = await axios.get(`https://testsdk.onrender.com/campaigns/UIS/${segment_id}`);
+        
+        const campaigns = await response.data;
         console.log(campaigns);
         return campaigns;
 
 
     }catch(error){
 
-
+            console.log("UIS FAILURE");
 
     }
 
