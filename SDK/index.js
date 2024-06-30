@@ -71,13 +71,16 @@ async function postCampaign(type,event){
 
 
         const response = await axios.post("https://testsdk.onrender.com/campaigns/postCampaign",{
-            type:type
+            type:type,
+            event:event
         });
        
 
         let users=await UIS(response.data);
         const campaigns = await response.data;
+        if(users && campaigns){
         console.log("Campaign created successfully",users);
+    }
         return campaigns;
 
 
@@ -96,13 +99,22 @@ async function UIS(segment_id){
     console.log("UIS----------------------------------------------------------------");
     console.log(segment_id , "--------------------------------");
     try{
-
-        const response = await axios.get(`https://testsdk.onrender.com/campaigns/UIS/${segment_id}`);
         
-        const campaigns = await response.data;
-        console.log(campaigns);
-        return campaigns;
+       
 
+              let allUser=  fetch(`https://testsdk.onrender.com/campaigns/UIS/${segment_id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ some: 'data' })
+                })
+                .then(response => response.json())
+                .then(data =>data)
+                .catch(error => console.error('Error:', error));
+
+
+                return allUser;
 
     }catch(error){
 
@@ -116,8 +128,14 @@ async function UIS(segment_id){
 
 
 
+async function getCampaignsForUser(MMID){
+    const response=await axios.get(`http://localhost:3000/campaigns//getCampaignsForUser?MMID=1223`)
+
+
+}
 
 
 
 
-module.exports = { getAllUsers, postUsers, viewedPageEvent, getUserEvents,postCampaign,getAllCampaigns};
+
+module.exports = { getAllUsers, postUsers, viewedPageEvent, getUserEvents,postCampaign,getAllCampaigns,UIS};

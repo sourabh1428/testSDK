@@ -137,5 +137,43 @@ router.post('/UIS/:segment_id', async (req, res) => {
     }
 });
 
+router.get('/getCampaignsForUser', async function(req, res) {
+    //http://localhost:3000/campaigns//getCampaignsForUser?MMID=1223
+    
+    try {
+        const userId = req.query.MMID;
+        console.log(userId);
+
+        // Fetch all segments
+        const segments = await client.db('test_db').collection("segments").find({}).toArray();
+        
+        let campaignsForUserIds = [];
+
+        // Iterate over each segment
+        for (let i = 0; i < segments.length; i++) {
+            const segment = segments[i];
+            
+            // Check if userId exists in the segment's users array
+            if (segment.users && segment.users.length>0 && segment.users.includes(userId)) {
+                campaignsForUserIds.push(segment.segment_id);
+            }
+        }
+
+        console.log(campaignsForUserIds);
+        res.send(campaignsForUserIds);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Failed to get campaigns for user." });
+    }
+});
+
+
+
+
+
+
+
+
 
 module.exports=router;
