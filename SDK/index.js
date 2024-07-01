@@ -2,7 +2,25 @@ const axios = require("axios");
 
 const Bottleneck = require("bottleneck");
 
-const {RequestQueue}=require('./requestHandler');
+
+const RequestQueue = require("./requestHandler");
+
+const requestQueue = new RequestQueue(RequestQueue.getQueueSize); // Set interval to 2000ms
+
+function wrapWithQueue(func) {
+    return async function(...args) {
+        return new Promise((resolve, reject) => {
+            requestQueue.add(async () => {
+                try {
+                    const result = await func(...args);
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+    };
+}
 
 // Configure Bottleneck
 async function getAllUsers() {
@@ -144,8 +162,6 @@ async function getCampaignsForUser(MMID){
 
 }
 
-const requestQueue=RequestQueue
-
 
 
 // Wrap each function with the rate limiter and queue
@@ -159,5 +175,5 @@ module.exports = {
     postCampaign: wrapWithQueue(postCampaign),
     getAllCampaigns: wrapWithQueue(getAllCampaigns),
     UIS: wrapWithQueue(UIS),
-    getQueueSize: () => RequestQueue.getQueueSize()
+    getQueueSize: () => requestQueue.getQueueSize()
 };

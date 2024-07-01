@@ -1,4 +1,3 @@
-
 class RequestQueue {
     constructor(interval = 200) {
         this.queue = [];
@@ -30,30 +29,10 @@ class RequestQueue {
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
-    getQueueSize(){
+
+    getQueueSize() {
         return this.queue.length;
     }
 }
 
-
-
-const requestQueue = new RequestQueue(2000); // Set interval to 200ms
-
-function wrapWithQueue(func) {
-    return async function(...args) {
-        return new Promise((resolve, reject) => {
-            requestQueue.add(async () => {
-                try {
-                    const result = await func(...args);
-                    resolve(result);
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        });
-    };
-}
-
-
-
-module.exports={wrapWithQueue,RequestQueue};
+module.exports = RequestQueue;

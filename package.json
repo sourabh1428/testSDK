@@ -10,7 +10,7 @@
     "user-sdk-1428": "^1.0.18"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [
