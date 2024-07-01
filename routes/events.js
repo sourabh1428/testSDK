@@ -23,7 +23,7 @@ async function connectToMongoDB() {
 }
 
 connectToMongoDB();
-router.post('/viewedPage', async function (req, res) {
+router.post('/addEvent', async function (req, res) {
     try {
         const db = client.db('test_db');
         const collection = db.collection('viewed_page');

@@ -67,6 +67,28 @@ router.post('/postUser', async (req, res) => {
 });
 
 
+router.post('/setUserAttribute',async function(req, res) {
+  const { MMID, attributeName, attributeValue }=req.params;
+
+  try{
+
+    const db = client.db('test_db');
+    const collection = db.collection('Users');
+    collection.findOne({MMID:MMID});
+    await collection.updateOne(
+      { MMID: MMID },
+      { $set: { [attributeName]: attributeValue } }
+    );
+
+  }catch(error){
+    console.log("Error posting user:", error);
+    res.status(500).json({ error: "Failed to post user" });
+  }
+
+
+})
+
+
 
 
 

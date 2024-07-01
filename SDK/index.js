@@ -1,5 +1,10 @@
 const axios = require("axios");
 
+const Bottleneck = require("bottleneck");
+
+const {RequestQueue}=require('./requestHandler');
+
+// Configure Bottleneck
 async function getAllUsers() {
     try {
         const response = await fetch("https://testsdk.onrender.com/users");
@@ -28,7 +33,7 @@ async function postUsers(name, email, ID) {
     }
 }
 
-async function viewedPageEvent(MMID, eventName) {
+async function addEventByUser(MMID, eventName) {
     try {
         const response = await axios.post("https://testsdk.onrender.com/events/viewedPage", {
             MMID: MMID,
@@ -129,13 +134,30 @@ async function UIS(segment_id){
 
 
 async function getCampaignsForUser(MMID){
-    const response=await axios.get(`http://localhost:3000/campaigns//getCampaignsForUser?MMID=1223`)
-
+    try{
+    const response=await axios.get(`https://testsdk.onrender.com/campaigns//getCampaignsForUser?MMID=${MMID}`)
+    return response.data;    
+}catch(error){
+        
+    console.log("Error while getting campaigns for "," ", MMID);
+    }
 
 }
 
+const requestQueue=RequestQueue
 
 
 
+// Wrap each function with the rate limiter and queue
 
-module.exports = { getAllUsers, postUsers, viewedPageEvent, getUserEvents,postCampaign,getAllCampaigns,UIS};
+module.exports = { 
+    getCampaignsForUser:wrapWithQueue(getCampaignsForUser),
+    getAllUsers: wrapWithQueue(getAllUsers), 
+    postUsers: wrapWithQueue(postUsers), 
+    addEventByUser: wrapWithQueue(addEventByUser), 
+    getUserEvents: wrapWithQueue(getUserEvents),
+    postCampaign: wrapWithQueue(postCampaign),
+    getAllCampaigns: wrapWithQueue(getAllCampaigns),
+    UIS: wrapWithQueue(UIS),
+    getQueueSize: () => RequestQueue.getQueueSize()
+};

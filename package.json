@@ -1,14 +1,16 @@
 {
   "dependencies": {
     "axios": "^1.7.2",
+    "bottleneck": "^2.19.5",
     "cors": "^2.8.5",
     "express": "^4.19.2",
     "learn1428": "^1.0.1",
     "mongodb": "^6.7.0",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "user-sdk-1428": "^1.0.18"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.14",
+  "version": "1.0.18",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [
