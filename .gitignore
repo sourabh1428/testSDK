@@ -1,3 +1,4 @@
 # Ignore entire directories
 node_modules/
 
+.env

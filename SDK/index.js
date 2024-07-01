@@ -1,7 +1,7 @@
 const axios = require("axios");
 
-const Bottleneck = require("bottleneck");
 
+require('dotenv').config();
 
 const RequestQueue = require("./requestHandler");
 
