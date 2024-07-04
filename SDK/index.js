@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const RequestQueue = require("./requestHandler");
 
-const requestQueue = new RequestQueue(RequestQueue.getQueueSize); // Set interval to 2000ms
+const requestQueue = new RequestQueue(); // Set interval to 2000ms
 
 function wrapWithQueue(func) {
     return async function(...args) {

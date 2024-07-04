@@ -1,17 +1,20 @@
 {
   "dependencies": {
     "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
     "bottleneck": "^2.19.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "jsonwebtoken": "^9.0.2",
     "learn1428": "^1.0.1",
     "mongodb": "^6.7.0",
     "nodemon": "^3.1.4",
-    "user-sdk-1428": "^1.0.18"
+    "user-sdk-1428": "^1.0.22"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.19",
+  "version": "1.0.22",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [

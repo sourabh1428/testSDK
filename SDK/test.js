@@ -1,21 +1,19 @@
-const { getCampaignsForUser, getQueueSize } = require('./index.js');
+const { getCampaignsForUser, getQueueSize } = require('user-sdk-1428');
 
 
 const RequestQueue = require("./requestHandler");
 
 async function abc() {
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10; i++) {
         const startTime = new Date(); // Record start time
-        getCampaignsForUser("1223"); // Await the response
+        await getCampaignsForUser("1223"); // Await the response
         const endTime = new Date(); // Record end time
         const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
         console.log(`Time taken: ${duration} seconds`);
         
     }
 }
-setInterval(async ()=>{
-   await console.log( getQueueSize());
-},100)
+
 abc();
 
 let z=0;

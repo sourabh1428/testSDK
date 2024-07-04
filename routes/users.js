@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const { generateToken, hashPassword, comparePassword } = require('../auth/jwtutils');
 const { MongoClient, ServerApiVersion , ObjectId } = require('mongodb');
 // MongoDB connection
 require('dotenv').config()
@@ -31,6 +31,7 @@ connectToMongoDB();
 router.get('/users', async (req, res) => {
   try {
     const db = client.db('test_db');
+    
     const collection = db.collection('Users');
     const result = await collection.find({}).limit(100).toArray();
     let ans=[];
