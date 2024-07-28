@@ -72,18 +72,26 @@ router.get('/userEvents', async function (req, res) {
         const db = client.db('test_db');
         const userEvent = db.collection('userEvent');
         const MMID = req.query.MMID; // Get the MMID from the query parameters
-
+       
         if (!MMID) {
             return res.status(400).send({ error: "MMID is required" });
         }
 
-        const user = await userEvent.findOne({ MMID: MMID });
+        const users = await userEvent.find({}).toArray();
 
-        if (!user) {
-            return res.status(404).send({ error: "User not found" });
+        for(let i=0;i<users.length;i++){
+            if(users[i].MMID==`${MMID}`){
+                console.log(users[i]);
+               return  res.status(200).json(users[i].events);
+            }
         }
 
-        res.status(200).json(user.events);
+        
+       
+            return res.status(404).send({ error: "User not found" });
+        
+
+
     } catch (error) {
         console.log(error);
         res.status(500).send({ error: "Failed to get user events" });

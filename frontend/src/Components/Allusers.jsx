@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import {getAllUsers} from 'user-sdk-1428'
 
 
 const Allusers = () => {
     const [data, setData] = useState([]);
+    const navigate=useNavigate();
+
 
     useEffect(() => {
       const fetchData = async () => {
@@ -19,12 +22,16 @@ const Allusers = () => {
       fetchData();
     }, []);
   
-    
+    function handleClick(e){
+        console.log(e);
+        navigate(`/User/${e._id}`);
+    }
+
 
     return (
       <div>
         {data.length > 0 ? (
-          data.map((e, index) => <h2 key={index}>{e._id}</h2>)
+          data.map((e, index) => <h2 onClick={()=>handleClick(e)} key={index}>{e.name}</h2>)
         ) : (
           <p>Loading...</p>
         )}
