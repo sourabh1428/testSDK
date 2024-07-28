@@ -36,7 +36,7 @@ router.get('/users', async (req, res) => {
     const result = await collection.find({}).limit(100).toArray();
     let ans=[];
     for(let i=0;i<result.length;i++){
-        ans.push(result[i].name);
+        ans.push(result[i]);
     }
     console.log("Got it!");
     res.json(ans);

@@ -11,10 +11,10 @@
     "learn1428": "^1.0.1",
     "mongodb": "^6.7.0",
     "nodemon": "^3.1.4",
-    "user-sdk-1428": "^1.0.22"
+    "user-sdk-1428": "^1.0.23"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.22",
+  "version": "1.0.24",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [

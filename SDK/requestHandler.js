@@ -1,5 +1,5 @@
 class RequestQueue {
-    constructor(interval = 5000, batchSize = 5) {
+    constructor(interval = 100, batchSize = 5) {
         this.queue = [];
         this.interval = interval;
         this.batchSize = batchSize;

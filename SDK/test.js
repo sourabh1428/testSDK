@@ -4,14 +4,17 @@ const { getCampaignsForUser, getQueueSize } = require('user-sdk-1428');
 const RequestQueue = require("./requestHandler");
 
 async function abc() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 200; i++) {
         const startTime = new Date(); // Record start time
-        await getCampaignsForUser("1223"); // Await the response
+        let res= await getCampaignsForUser("1223");
+        console.log(res," Call happend ::", i , "times");
+       
         const endTime = new Date(); // Record end time
         const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
         console.log(`Time taken: ${duration} seconds`);
-        
-    }
+   
+    
+}
 }
 
 abc();
