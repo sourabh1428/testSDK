@@ -13,7 +13,7 @@
     "mongodb": "^6.7.0",
     "mongoose": "^8.5.2",
     "nodemon": "^3.1.4",
-    "user-sdk-1428": "^1.0.23"
+    "user-sdk-1428": "file:"
   },
   "name": "user-sdk-1428",
   "version": "1.0.25",

@@ -100,7 +100,27 @@ router.get('/userEvents', async function (req, res) {
 
 
 
+router.post('/getEvents', async function (req, res) {
+    const event = req.body.eName;
+    console.log(event);
+    
+    const db = client.db('test_db');
+    const eventCollection = await db.collection('viewed_page').find({}).toArray();
+    
 
+    try {
+        // Use filter to get the matching events
+        const data = eventCollection.filter(e => e.eventName === event);
+
+
+        // Send the response with the filtered data
+        return res.status(200).json({ data:data});
+    } catch (error) {
+        console.log("Error in getting events from collection:", error);
+
+        return res.status(500).json({ error: error.message });
+    }
+});
 
 
 module.exports = router;

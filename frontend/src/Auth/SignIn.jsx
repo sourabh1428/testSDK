@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate=useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,11 +22,15 @@ const SignIn = () => {
       });
 
       const result = await response.json();
-      if (response.ok) {
+      console.log(result);
+      
+      if (result.token) {
         setSuccess('Sign-in successful!');
         setError('');
+
         // Example: Storing the token in localStorage
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('token', result.token);
+        navigate('/');
 
         // Save token or do something with the response
       } else {

@@ -35,6 +35,7 @@ const campaignRoutes = require('./routes/campaign.js');
 const authRoute=require('./routes/Auth.js');
 
 const auth=require('./middleware');
+const { getAllCampaigns, UIS } = require('./SDK/index.js');
 // Use routes
 
 
@@ -46,3 +47,20 @@ app.use('/auth',authRoute );
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
+
+async function hue(){
+  let ans=await getAllCampaigns();
+
+      for(let i=0;i<ans.length;i++){
+          let x=UIS(ans[i].segment_id);
+          console.log("segment refreshed it's segment id: "+ans[i].segment_id);
+       
+      }
+
+}
+
+setInterval(() => {
+  hue();
+}, 10000);

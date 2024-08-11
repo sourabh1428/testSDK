@@ -162,6 +162,19 @@ async function getCampaignsForUser(MMID){
 
 }
 
+// setgmentation refresh in every 10 seconds
+
+
+
+    
+
+    // UIS()
+
+
+  
+
+
+
 
 
 // Wrap each function with the rate limiter and queue
