@@ -50,6 +50,8 @@ app.listen(port, () => {
 
 
 
+//segment refresh every 10 segments
+
 async function hue(){
   let ans=await getAllCampaigns();
 
