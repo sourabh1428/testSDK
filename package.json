@@ -2,6 +2,7 @@
   "dependencies": {
     "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "bottleneck": "^2.19.5",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -10,11 +11,12 @@
     "jsonwebtoken": "^9.0.2",
     "learn1428": "^1.0.1",
     "mongodb": "^6.7.0",
+    "mongoose": "^8.5.2",
     "nodemon": "^3.1.4",
     "user-sdk-1428": "^1.0.23"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [

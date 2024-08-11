@@ -66,6 +66,7 @@ async function getUserEvents(MMID) {
     try {
         const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`);
         console.log(response.data);
+        return response.data;
     } catch (error) {
         console.log(error);
     }

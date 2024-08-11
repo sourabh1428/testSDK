@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import {getAllUsers} from 'user-sdk-1428'
-
+import { Spinner } from '@chakra-ui/react'
 
 const Allusers = () => {
     const [data, setData] = useState([]);
@@ -24,7 +24,7 @@ const Allusers = () => {
   
     function handleClick(e){
         console.log(e);
-        navigate(`/User/${e._id}`);
+        navigate(`/User/${e.ID}`);
     }
 
 
@@ -33,7 +33,7 @@ const Allusers = () => {
         {data.length > 0 ? (
           data.map((e, index) => <h2 onClick={()=>handleClick(e)} key={index}>{e.name}</h2>)
         ) : (
-          <p>Loading...</p>
+          <Spinner size='xl' />
         )}
       </div>
     );

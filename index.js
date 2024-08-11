@@ -7,7 +7,7 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 
 
-authenticateJWT
+
 
 const port = 3000;
 
@@ -32,10 +32,17 @@ const eventRoutes=require('./routes/events.js');
 
 const campaignRoutes = require('./routes/campaign.js');
 
+const authRoute=require('./routes/Auth.js');
+
+const auth=require('./middleware');
 // Use routes
+
+
+
 app.use('/', routes);
 app.use('/events', eventRoutes);
-app.use('/campaigns', campaignRoutes);
+app.use('/campaigns' ,campaignRoutes);
+app.use('/auth',authRoute );
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

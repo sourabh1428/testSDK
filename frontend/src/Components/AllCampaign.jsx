@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAllCampaigns } from 'user-sdk-1428';
-
+import { Spinner } from '@chakra-ui/react'
 const AllCampaign = () => {
   const [data, setData] = useState([]);
 
@@ -23,7 +23,7 @@ const AllCampaign = () => {
       {data.length > 0 ? (
         data.map((e, index) => <h2 key={index}>{e._id}</h2>)
       ) : (
-        <p>Loading...</p>
+        <Spinner size='xl' />
       )}
     </div>
   );
