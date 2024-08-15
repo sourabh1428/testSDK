@@ -54,8 +54,7 @@ router.post('/getParticularCampaign',async (req,res)=>{
  })
  
 
-
-router.post('/postCampaign', async (req, res) => {
+ router.post('/postCampaign', async (req, res) => {
     try {
         const campaignData = req.body;
 
@@ -64,24 +63,29 @@ router.post('/postCampaign', async (req, res) => {
         campaignData._id = objId;
         campaignData.segment_id = objId.toString(); // Convert ObjectId to string for segment_id
 
+        // Add creation timestamp in epoch format
+        campaignData.createdAt = Date.now(); // Epoch time in milliseconds
+
         // Check if the campaign already exists
         const campaign = await client.db('test_db').collection("campaigns").findOne({ _id: campaignData._id });
         if (campaign) {
             res.status(400).send("Campaign is already registered");
             return;
         }
-        const campaignType=campaignData.type;
-        
+
+        const campaignType = campaignData.type;
 
         // Insert the new campaign
         await client.db('test_db').collection("campaigns").insertOne(campaignData);
 
         // Insert the segment with a reference to the campaign
-        
-        if(campaignType=="Event"){
-            await client.db('test_db').collection("segments").insertOne({ segment_id:campaignData.segment_id ,event:campaignData.event });
-        
-    }
+        if (campaignType === "Event") {
+            await client.db('test_db').collection("segments").insertOne({
+                segment_id: campaignData.segment_id,
+                event: campaignData.event,
+                createdAt: campaignData.createdAt // Optional: Include creation time in the segment
+            });
+        }
 
         res.json(campaignData.segment_id);
     } catch (e) {

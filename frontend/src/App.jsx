@@ -9,6 +9,7 @@ import SignUp from './Auth/SignUp';
 import SignIn from './Auth/SignIn';
 import Analytics from './Charts/Analytics';
 import MultiStepForm from './Campaigns/CreateIt';
+import SingleCampaign from './Campaigns/SingleCampaign';
 
 const AppContent = () => {
   const location = useLocation();
@@ -25,6 +26,7 @@ const AppContent = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/analytics" element={<Analytics/>} />
         <Route path="/createit" element={<MultiStepForm/>} />
+        <Route path="/campaign/:cid" element={<SingleCampaign/>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

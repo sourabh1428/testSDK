@@ -88,21 +88,18 @@ async function getAllCampaigns(){
     }
 }
 
-async function getParticularCampaign(data){
-
-    try{
-
-        const response= await axios.get("https://testsdk.onrender.com/campaigns/getParticularCampaign",{
-            cid:data
-        });
-        return response.data;
-
-    }catch(error){
-        return "error";
+async function getParticularCampaign(data) {
+    try {
+      const response = await axios.post("https://testsdk.onrender.com/campaigns/getParticularCampaign", {
+        cid: data
+      });
+      return response.data; // Return the actual data
+    } catch (error) {
+      console.error("Error fetching campaign:", error); // Log the error
+      throw error; // Optionally, rethrow the error if you want to handle it further up the chain
     }
-
-}
-
+  }
+  
 async function postCampaign(type,event,description,name,imageURL){
   
     try{

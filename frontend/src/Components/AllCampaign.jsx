@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAllCampaigns } from 'user-sdk-1428';
-import { Spinner } from '@chakra-ui/react';
+import { Spinner, Box, Container, Heading, Text, Button, Stack, Image, Center } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from "jwt-decode"; // Correct import
+import {jwtDecode} from 'jwt-decode'; // Correct import
 import CreateCampaign from './../Campaigns/CreateCampaign';
+import { motion } from 'framer-motion';
+
+// Define a motion.div for animations
+const MotionBox = motion(Box);
 
 const AllCampaign = () => {
   const [data, setData] = useState([]);
@@ -58,15 +62,55 @@ const AllCampaign = () => {
     fetchData();
   }, []); // Run once when the component mounts
 
+  const handleBoxClick = (id) => {
+    navigate(`/campaign/${id}`);
+  };
+
   return (
-    <div>
-     <CreateCampaign/>
-      {data.length > 0 ? (
-        data.map((e, index) => <h2 key={index}>{e.name}</h2>)
-      ) : (
-        <Spinner size='xl' />
-      )}
-    </div>
+    <Container maxW="container.lg" p={4}>
+      <CreateCampaign />
+      <Center>
+        <Stack spacing={4} width="full" maxW="md">
+          {data.length > 0 ? (
+            data.map((campaign, index) => (
+              <MotionBox
+                key={index}
+                borderWidth={1}
+                borderRadius="lg"
+                overflow="hidden"
+                p={4}
+                bg="white"
+                boxShadow="md"
+                cursor="pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                display="flex"
+                alignItems="center"
+                onClick={() => handleBoxClick(campaign.segment_id)}
+              >
+                <Image
+                  src={campaign.imageURL || 'path/to/default-image.jpg'}
+                  alt={campaign.name}
+                  boxSize="80px"
+                  objectFit="cover"
+                  mr={4}
+                />
+                <Box flex="1">
+                  <Heading size="md" mb={2}>{campaign.name}</Heading>
+                  <Text noOfLines={2}>{campaign.description || "No description available"}</Text>
+                </Box>
+              </MotionBox>
+            ))
+          ) : (
+            <Stack align="center">
+              <Spinner size="xl" />
+              <Text mt={4}>Loading campaigns...</Text>
+            </Stack>
+          )}
+        </Stack>
+      </Center>
+    </Container>
   );
 };
 

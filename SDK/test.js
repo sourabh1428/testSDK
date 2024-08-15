@@ -26,7 +26,7 @@ const { UIS } = require('.');
 abc();
 
 async function abc(){
-    let ans=await getParticularCampaign("66be26e75d86c14cabd74925");
+    let ans=await getParticularCampaign("66be320c131b427b99d711a3");
     console.log(ans);
     console.log("above");
     
