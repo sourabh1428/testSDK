@@ -39,6 +39,20 @@ router.get('/getAllCampaign',async (req,res)=>{
     console.log(error);
    }
 })
+router.get('/getParticularCampaign',async (req,res)=>{
+    try{
+        let cid=req.body.cid;
+     let allcampaigns=await client.db('test_db').collection("campaigns");
+    const cdata=await allcampaigns.findOne({segment_id: cid});
+    
+     
+     console.log(cdata);
+     res.send(cdata)
+    }catch(error){
+     console.log(error);
+    }
+ })
+ 
 
 
 router.post('/postCampaign', async (req, res) => {

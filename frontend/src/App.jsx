@@ -8,6 +8,7 @@ import Navbar from './Components/Navbar';
 import SignUp from './Auth/SignUp';
 import SignIn from './Auth/SignIn';
 import Analytics from './Charts/Analytics';
+import MultiStepForm from './Campaigns/CreateIt';
 
 const AppContent = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const AppContent = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/analytics" element={<Analytics/>} />
+        <Route path="/createit" element={<MultiStepForm/>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

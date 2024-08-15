@@ -3,6 +3,7 @@ import { getAllCampaigns } from 'user-sdk-1428';
 import { Spinner } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from "jwt-decode"; // Correct import
+import CreateCampaign from './../Campaigns/CreateCampaign';
 
 const AllCampaign = () => {
   const [data, setData] = useState([]);
@@ -59,8 +60,9 @@ const AllCampaign = () => {
 
   return (
     <div>
+     <CreateCampaign/>
       {data.length > 0 ? (
-        data.map((e, index) => <h2 key={index}>{e._id}</h2>)
+        data.map((e, index) => <h2 key={index}>{e.name}</h2>)
       ) : (
         <Spinner size='xl' />
       )}

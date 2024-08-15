@@ -22,7 +22,12 @@ const Navbar = () => {
   return (<div>
      <Flex className='NavBar' align="center" justify="space-between">
     hi
-    <Avatar src='https://bit.ly/broken-link' />
+
+    <ButtonGroup variant="outline">
+      <Button size='sm' onClick={()=>navigate("campaigns")}>Campaigns</Button>
+      <Button size='sm' onClick={()=>navigate("users")}>Users</Button>
+      <Button size='sm' onClick={()=>navigate("analytics")}>Analytics</Button>
+    </ButtonGroup>
     <Button colorScheme='teal' size='md'onClick={handleClick}>Logout</Button>
 </Flex>
 

@@ -88,14 +88,17 @@ async function getAllCampaigns(){
     }
 }
 
-async function postCampaign(type,event){
+async function postCampaign(type,event,description,name,imageURL){
   
     try{
 
 
         const response = await axios.post("https://testsdk.onrender.com/campaigns/postCampaign",{
             type:type,
-            event:event
+            event:event,
+            description:description,
+            name:name,
+            imageURL:imageURL
         });
        
 

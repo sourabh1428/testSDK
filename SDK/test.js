@@ -32,16 +32,20 @@ let z=0;
 
 
 
-// for(let i=0;i<100;i++){
-//     const startTime = new Date(); // Record start time
 
-//     let ans=   getCampaignsForUser("1223");
+   
 
-//      const endTime = new Date(); // Record end time
-//         const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
-//         console.log(`Time taken: ${duration} seconds`);
-// }
-
+    async function abc(){
+        const startTime = new Date(); // Record start time
+        let ans=    await getCampaignsForUser("1223");
+        console.log(ans);
+        const endTime = new Date(); // Record end time
+        const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
+        console.log(`Time taken: ${duration} seconds`);
+        
+    }
+    abc();
+    
 
 
     

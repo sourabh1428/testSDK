@@ -16,7 +16,7 @@
     "user-sdk-1428": "file:"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.25",
+  "version": "1.0.31",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [
