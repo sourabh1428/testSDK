@@ -39,7 +39,7 @@ router.get('/getAllCampaign',async (req,res)=>{
     console.log(error);
    }
 })
-router.get('/getParticularCampaign',async (req,res)=>{
+router.post('/getParticularCampaign',async (req,res)=>{
     try{
         let cid=req.body.cid;
      let allcampaigns=await client.db('test_db').collection("campaigns");

@@ -1,26 +1,14 @@
-const { getCampaignsForUser, getQueueSize ,getAllCampaigns} = require('user-sdk-1428');
+const { getParticularCampaign,getCampaignsForUser, getQueueSize ,getAllCampaigns} = require('./index');
 
 
 const RequestQueue = require("./requestHandler");
 const { UIS } = require('.');
 
-async function abc() {
-    for (let i = 0; i < 200; i++) {
-        const startTime = new Date(); // Record start time
-        let res= await getCampaignsForUser("1223");
-        console.log(res," Call happend ::", i , "times");
-       
-        const endTime = new Date(); // Record end time
-        const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
-        console.log(`Time taken: ${duration} seconds`);
-   
-    
-}
-}
 
 
 
-let z=0;
+
+
 // setInterval(()=>{
 //     const queueSize = getQueueSize();
 //     if(queueSize==0)z=0;
@@ -35,17 +23,15 @@ let z=0;
 
    
 
-    async function abc(){
-        const startTime = new Date(); // Record start time
-        let ans=    await getCampaignsForUser("1223");
-        console.log(ans);
-        const endTime = new Date(); // Record end time
-        const duration = (endTime - startTime) / 1000; // Calculate duration in seconds
-        console.log(`Time taken: ${duration} seconds`);
-        
-    }
-    abc();
+abc();
+
+async function abc(){
+    let ans=await getParticularCampaign("66be26e75d86c14cabd74925");
+    console.log(ans);
+    console.log("above");
     
+
+}
 
 
     

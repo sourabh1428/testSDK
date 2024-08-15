@@ -88,6 +88,21 @@ async function getAllCampaigns(){
     }
 }
 
+async function getParticularCampaign(data){
+
+    try{
+
+        const response= await axios.get("https://testsdk.onrender.com/campaigns/getParticularCampaign",{
+            cid:data
+        });
+        return response.data;
+
+    }catch(error){
+        return "error";
+    }
+
+}
+
 async function postCampaign(type,event,description,name,imageURL){
   
     try{
@@ -191,5 +206,6 @@ module.exports = {
     postCampaign: wrapWithQueue(postCampaign),
     getAllCampaigns: wrapWithQueue(getAllCampaigns),
     UIS: wrapWithQueue(UIS),
+    getParticularCampaign:wrapWithQueue(getParticularCampaign),
     getQueueSize: () => requestQueue.getQueueSize()
 };
