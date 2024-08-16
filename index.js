@@ -35,7 +35,7 @@ const campaignRoutes = require('./routes/campaign.js');
 const authRoute=require('./routes/Auth.js');
 
 const auth=require('./middleware');
-const { getAllCampaigns, UIS } = require('./SDK/index.js');
+
 // Use routes
 
 
