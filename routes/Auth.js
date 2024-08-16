@@ -19,6 +19,7 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+const JWT_SECRET = process.env.JWT_SECRET || '123';
 
 // Ensure the MongoDB client connects before starting the server
 async function connectToMongoDB() {
@@ -33,55 +34,102 @@ async function connectToMongoDB() {
 connectToMongoDB();
 
 router.post('/signup', async (req, res) => {
-    const { username, email, password } = req.body;
-    console.log(username, email, password);
-  
-    try {
-      let existingUser = await client.db('test_db').collection("Authentication").findOne({ email });
-      console.log(existingUser);
-      
-      if (existingUser) return res.status(400).json({ msg: 'User already exists' });
-  
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      const newUser = { username, email, password: hashedPassword };
-      const result = await client.db('test_db').collection("Authentication").insertOne(newUser);
-      
- // result.ops[0] contains the inserted document
-  
-      const token = jwt.sign({ id: result.insertedId }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  
-      res.status(201).json({ token });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Something went wrong' });
-    }
-  });
-  
+  const { username, email, password } = req.body;
+  console.log('Sign-Up Request:', { username, email });
 
+  try {
+    // Connect to the database
+    await client.connect();
+    const db = client.db('test_db');
+    console.log('Connected to database');
+
+    // Check if user already exists
+    let existingUser = await db.collection('Authentication').findOne({ email });
+    console.log('Existing User:', existingUser);
+
+    if (existingUser) {
+      return res.status(400).json({ msg: 'User already exists' });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new user with additional fields
+    const newUser = {
+      username,
+      email,
+      password: hashedPassword,
+      isVerified: false, // Set default value
+      role: 'member' // Set default role
+    };
+
+    // Insert new user into the database
+    const result = await db.collection('Authentication').insertOne(newUser);
+
+    // Generate JWT token
+    const token = jwt.sign({ id: result.insertedId }, JWT_SECRET, { expiresIn: '1h' });
+    console.log('Token generated:', token);
+
+    // Send response with token
+    res.status(201).json({ token });
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({ error: 'Something went wrong' });
+  } finally {
+    // Close the database connection
+    await client.close();
+    console.log('Database connection closed');
+  }
+});
   
+ 
+
   router.post('/signin', async (req, res) => {
     const { email, password } = req.body;
-    console.log(email, password);
+    console.log('Sign-In Request:', { email });
   
     try {
-      let user = await client.db('test_db').collection("Authentication").findOne({ email });
-      console.log(user);
+      // Connect to the database
+      await client.connect();
+      const db = client.db('test_db');
+      console.log('Connected to database');
   
-      if (!user) return res.status(400).json({ msg: 'User does not exist' });
+      // Find the user
+      const user = await db.collection('Authentication').findOne({ email });
+      console.log('User found:', user);
   
+      // Check if user exists
+      if (!user) {
+        console.log('User does not exist');
+        return res.status(400).json({ msg: 'User does not exist' });
+      }
+  
+      // Check if user is verified, unless the role is admin
+      if (user.role !== 'admin' && !user.isVerified) {
+        console.log('User is not verified');
+        return res.status(400).json({ msg: 'User is not verified' });
+      }
+  
+      // Check if password matches
       const isMatch = await bcrypt.compare(password, user.password);
-      if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
+      if (!isMatch) {
+        console.log('Invalid credentials');
+        return res.status(400).json({ msg: 'Invalid credentials' });
+      }
   
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      // Generate JWT token
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+      console.log('Token generated:', token);
   
       res.json({ token });
     } catch (err) {
-      console.error(err);
+      console.error('Error:', err);
       res.status(500).json({ error: 'Something went wrong' });
+    } finally {
+      // Close the database connection
+      await client.close();
+      console.log('Database connection closed');
     }
   });
-  
-
 
   module.exports = router;

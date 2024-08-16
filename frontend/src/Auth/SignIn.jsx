@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, Button, Container, FormControl, FormLabel, Input, Text, Link, useToast, Spinner } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+
+const MotionBox = motion(Box);
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const navigate=useNavigate();
+  const [loading, setLoading] = useState(false); // Loading state
+  const navigate = useNavigate();
+  const toast = useToast();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -13,6 +19,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading animation
 
     try {
       const response = await fetch('http://localhost:3000/auth/signin', {
@@ -22,17 +29,18 @@ const SignIn = () => {
       });
 
       const result = await response.json();
-      console.log(result);
-      
       if (result.token) {
         setSuccess('Sign-in successful!');
         setError('');
-
-        // Example: Storing the token in localStorage
         localStorage.setItem('token', result.token);
+        toast({
+          title: 'Success',
+          description: 'Sign-in successful!',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
         navigate('/');
-
-        // Save token or do something with the response
       } else {
         setError(result.msg || 'Invalid credentials');
         setSuccess('');
@@ -40,46 +48,66 @@ const SignIn = () => {
     } catch (err) {
       setError('An error occurred');
       setSuccess('');
+    } finally {
+      setLoading(false); // Hide loading animation
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', border: '1px solid #ddd' }}>
-      <h2>Sign In</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '10px' }}>
-          <label>
-            Email:
-            <input
+    <Container maxW="md" p={4} centerContent>
+      <MotionBox
+        borderWidth={1}
+        borderRadius="lg"
+        overflow="hidden"
+        p={6}
+        bg="white"
+        boxShadow="md"
+        width="full"
+        initial={{ opacity: 0, x: -100 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Text fontSize="2xl" mb={6} textAlign="center">Sign In</Text>
+        <form onSubmit={handleSubmit}>
+          <FormControl mb={4}>
+            <FormLabel>Email</FormLabel>
+            <Input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter your email"
               required
-              style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             />
-          </label>
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <label>
-            Password:
-            <input
+          </FormControl>
+          <FormControl mb={6}>
+            <FormLabel>Password</FormLabel>
+            <Input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="Enter your password"
               required
-              style={{ width: '100%', padding: '8px', marginTop: '5px' }}
             />
-          </label>
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        {success && <p style={{ color: 'green' }}>{success}</p>}
-        <button type="submit" style={{ width: '100%', padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none' }}>
-          Sign In
-        </button>
-      </form>
-    </div>
+          </FormControl>
+          {error && <Text color="red.500" mb={4}>{error}</Text>}
+          {success && <Text color="green.500" mb={4}>{success}</Text>}
+          <Button
+            type="submit"
+            colorScheme="teal"
+            width="full"
+            mb={4}
+            isDisabled={loading}
+          >
+            {loading ? <Spinner size="sm" /> : 'Sign In'}
+          </Button>
+          <Text textAlign="center">
+            Don't have an account? <Link color="teal.500" onClick={() => navigate('/signup')}>Sign Up</Link>
+          </Text>
+        </form>
+      </MotionBox>
+    </Container>
   );
 };
 

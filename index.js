@@ -53,7 +53,8 @@ app.listen(port, () => {
 //segment refresh every 10 segments
 
 async function hue(){
-  let ans=await getAllCampaigns();
+  let ans=[];
+  ans=await getAllCampaigns();
 
       for(let i=0;i<ans.length;i++){
           let x=UIS(ans[i].segment_id);
