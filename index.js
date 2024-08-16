@@ -52,18 +52,18 @@ app.listen(port, () => {
 
 //segment refresh every 10 segments
 
-async function hue(){
-  let ans=[];
-  ans=await getAllCampaigns();
+// async function hue(){
+//   let ans=[];
+//   ans=await getAllCampaigns();
 
-      for(let i=0;i<ans.length;i++){
-          let x=UIS(ans[i].segment_id);
-          console.log("segment refreshed it's segment id: "+ans[i].segment_id);
+//       for(let i=0;i<ans.length;i++){
+//           let x=UIS(ans[i].segment_id);
+//           console.log("segment refreshed it's segment id: "+ans[i].segment_id);
        
-      }
+//       }
 
-}
+// }
 
-setInterval(() => {
-  hue();
-}, 10000);
+// setInterval(() => {
+//   hue();
+// }, 10000);
