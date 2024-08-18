@@ -12,14 +12,18 @@ import axios from 'axios'
 
 
 async function getAllCampaigns(){
+  console.log("getting all campaign");
+  
   try{
-
+      
       const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign", {
           headers: {
                'x-api-key': `123`
           }});
   
       const campaigns = await response.data;
+      console.log("called");
+      
       console.log(campaigns);
       return campaigns;
 

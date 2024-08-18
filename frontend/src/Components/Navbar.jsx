@@ -29,7 +29,7 @@ const Navbar = () => {
     >
       {/* Logo or Title */}
       <Box>
-        <Avatar name="User Name" src="path/to/user-avatar.jpg" size="md">
+        <Avatar name="User Name" src="./avatar.svg" size="md">
           <AvatarBadge boxSize="1em" bg="green.500" />
         </Avatar>
       </Box>

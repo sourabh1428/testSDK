@@ -85,7 +85,7 @@ async function addEventByUser(MMID, eventName) {
             }});
         let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
 
-        await ShowOSM(campaignData);
+        if(campaignData)await ShowOSM(campaignData);
         
         return campaignData;
     } catch (error) {
@@ -233,7 +233,7 @@ async function updateAnalytics(cid){
 
 async function getCampaignsForUser(MMID){
     try{
-    const response=await axios.get(`https://testsdk.onrender.com/campaigns//getCampaignsForUser?MMID=${MMID}`, {
+    const response=await axios.get(`https://testsdk.onrender.com/campaigns/getCampaignsForUser?MMID=${MMID}`, {
         headers: {
             'x-api-key': `${getAuthToken()}`
         }})

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Box, Heading, Text, Image, Skeleton, Container, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, Flex } from '@chakra-ui/react';
-
+import { useParams, useNavigate } from 'react-router-dom';
+import { Box, Heading, Text, Image, Skeleton, Container, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, Flex, Button } from '@chakra-ui/react';
 import moment from 'moment-timezone';
-import axios from 'axios'
+import axios from 'axios';
 
 async function getParticularCampaign(data) {
   try {
@@ -19,8 +18,25 @@ async function getParticularCampaign(data) {
     throw error; // Optionally, rethrow the error if you want to handle it further up the chain
   }
 }
+
+async function deleteCampaign(cid) {
+  try {
+    await axios.delete("https://testsdk.onrender.com/campaigns/deleteCampaign", {
+      headers: {
+           'x-api-key': `123`
+      },
+      data: { cid }
+    });
+    return true;
+  } catch (error) {
+    console.error("Error deleting campaign:", error); // Log the error
+    throw error; // Optionally, rethrow the error if you want to handle it further up the chain
+  }
+}
+
 const SingleCampaign = () => {
   const { cid } = useParams();
+  const navigate = useNavigate();
   const [campaign, setCampaign] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,6 +64,15 @@ const SingleCampaign = () => {
 
   const formatDate = (epochTime) => {
     return moment.unix(epochTime).tz('Asia/Kolkata').format('DD MMM YYYY, hh:mm A');
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteCampaign(cid);
+      navigate('/');
+    } catch (error) {
+      setError("An error occurred while deleting the campaign.");
+    }
   };
 
   if (error) {
@@ -102,23 +127,23 @@ const SingleCampaign = () => {
               objectFit="cover"
               mb={4}
             />
-          <Box mt={8} p={4} borderRadius="md" bg="gray.50" boxShadow="base" w="full">
-  <Flex justify="space-between" align="center">
-    <Text fontSize="xl" fontWeight="bold" color="teal.600">Analytics</Text>
-    <Box
-      bg="teal.500"
-      color="white"
-      px={4}
-      py={2}
-      borderRadius="full"
-      fontSize="lg"
-      fontWeight="bold"
-      boxShadow="sm"
-    >
-      Impressions: {campaign.analytics?.impression || 0}
-    </Box>
-  </Flex>
-</Box>
+            <Box mt={8} p={4} borderRadius="md" bg="gray.50" boxShadow="base" w="full">
+              <Flex justify="space-between" align="center">
+                <Text fontSize="xl" fontWeight="bold" color="teal.600">Analytics</Text>
+                <Box
+                  bg="teal.500"
+                  color="white"
+                  px={4}
+                  py={2}
+                  borderRadius="full"
+                  fontSize="lg"
+                  fontWeight="bold"
+                  boxShadow="sm"
+                >
+                  Impressions: {campaign.analytics?.impression || 0}
+                </Box>
+              </Flex>
+            </Box>
             <Flex
               direction="row"
               justify="flex-end"
@@ -128,7 +153,8 @@ const SingleCampaign = () => {
               bottom="10px"
               right="10px"
             >
-              <Text fontSize="sm" color="gray.500">Created At: {formatDate(campaign.createdAt)}</Text>
+              <Text fontSize="sm" color="gray.500" mr={4}>Created At: {formatDate(campaign.createdAt)}</Text>
+              <Button colorScheme="red" onClick={handleDelete}>Delete Campaign</Button>
             </Flex>
           </>
         )}
