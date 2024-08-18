@@ -1,4 +1,4 @@
-const { getParticularCampaign,getCampaignsForUser, getQueueSize ,getAllCampaigns,smartTrigger,addEventByUser} =require('./index');;
+const { getParticularCampaign,updateAnalytics,getCampaignsForUser, getQueueSize ,getAllCampaigns,smartTrigger,addEventByUser} =require('./index');;
 
 
 const RequestQueue = require("./requestHandler");
@@ -27,7 +27,7 @@ const { UIS } = require('.');
 
 async function abc(){
     try{
-    let ans=await addEventByUser("1223","Add to cart");
+    let ans=await updateAnalytics("66c1c2427a4707caac1c4eb5");
     console.log(ans);
     }
     catch(error){
@@ -37,6 +37,7 @@ async function abc(){
     
 
 }
+
 abc();
 
     

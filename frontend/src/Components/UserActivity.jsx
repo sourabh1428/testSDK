@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './UserActivity.css';
 import { Spinner } from '@chakra-ui/react'
-
+import axios from 'axios'
 async function getUserEvents(MMID) {
   try {
       const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`, {
           headers: {
-              'api-x-key': `123`
+              'x-api-key': `123`
           }});
       console.log(response.data);
       return response.data;

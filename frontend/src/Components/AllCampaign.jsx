@@ -16,7 +16,7 @@ async function getAllCampaigns(){
 
       const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign", {
           headers: {
-              'api-x-key': `123`
+               'x-api-key': `123`
           }});
   
       const campaigns = await response.data;

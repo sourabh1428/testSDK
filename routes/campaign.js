@@ -232,6 +232,38 @@ router.post('/updateAnalytics', async function(req, res) {
 });
 
 
+router.delete('/deleteCampaign', async function(req, res) {
+    const cid = req.body.cid;
+
+    try {
+        // Connect to the database
+        await client.connect();
+        const db = client.db('test_db');
+
+        // Delete the campaign from the "campaigns" collection
+        const campaignDeleteResult = await db.collection("campaigns").deleteOne({ segment_id: cid });
+
+        // Delete the campaign from the "segments" collection
+        const segmentDeleteResult = await db.collection("segments").deleteOne({ segment_id: cid });
+
+        // Check if any documents were deleted
+        if (campaignDeleteResult.deletedCount === 0 && segmentDeleteResult.deletedCount === 0) {
+            return res.status(404).json({ message: "No campaign or segment found with the given ID" });
+        }
+
+        // Respond with success if the deletion was successful
+        return res.status(200).json({ message: "Campaign and segment deleted successfully" });
+    } catch (err) {
+        // Handle errors and respond with a 500 status code
+        console.error("Error deleting campaign and segment:", err);
+        return res.status(500).json({ message: "An error occurred while deleting the campaign and segment" });
+    } finally {
+        // Close the database connection
+        await client.close();
+    }
+});
+
+
 
 
 

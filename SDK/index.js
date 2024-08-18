@@ -1,5 +1,5 @@
 const axios = require("axios");
-import { useState } from 'react';
+
 
 
 // require('dotenv').config();
@@ -42,7 +42,7 @@ async function getAllUsers() {
     try {
         const response = await fetch("https://testsdk.onrender.com/users", {
             headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+               'x-api-key': `${getAuthToken()}`
             }
         });
         if (!response.ok) {
@@ -64,7 +64,7 @@ async function postUsers(name, email, ID) {
             ID: ID
         }, {
             headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+               'x-api-key': `${getAuthToken()}`
             }
         });
 
@@ -81,10 +81,10 @@ async function addEventByUser(MMID, eventName) {
             eventName: eventName
         }, {
             headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+         'x-api-key': `${getAuthToken()}`
             }});
         let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
-        
+
         await ShowOSM(campaignData);
         
         return campaignData;
@@ -97,7 +97,7 @@ async function getUserEvents(MMID) {
     try {
         const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`, {
             headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+             'x-api-key': `${getAuthToken()}`
             }});
         console.log(response.data);
         return response.data;
@@ -112,7 +112,7 @@ async function getAllCampaigns(){
 
         const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign", {
             headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+              'x-api-key': `${getAuthToken()}`
             }});
     
         const campaigns = await response.data;
@@ -131,7 +131,7 @@ async function getParticularCampaign(data) {
         cid: data
       }, {
         headers: {
-            'Authorization': `Bearer ${getAuthToken()}`
+          'x-api-key': `${getAuthToken()}`
         }});
       return response.data; // Return the actual data
     } catch (error) {
@@ -153,7 +153,7 @@ async function postCampaign(type,event,description,name,imageURL){
             imageURL:imageURL
         }, {
             headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
+               'x-api-key': `${getAuthToken()}`
             }});
        
 
@@ -187,7 +187,7 @@ async function UIS(segment_id){
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                         'Authorization': `Bearer ${getAuthToken()}`
+                        'x-api-key': `${getAuthToken()}`
 
                     },
                     body: JSON.stringify({ some: 'data' })
@@ -209,13 +209,33 @@ async function UIS(segment_id){
 
 }
 
+async function updateAnalytics(cid){
+
+    try{
+        const response=await axios.post(`https://testsdk.onrender.com/campaigns/updateAnalytics`,{
+            cid:cid
+        }, {
+            headers: {
+                'x-api-key': `${getAuthToken()}`
+            }});
+        console.log("Analytics updated successfully",response.data);
+        return response.data;
+    }catch(error){
+        console.log(error);
+    }
+
+
+}
+
+
+
 
 
 async function getCampaignsForUser(MMID){
     try{
     const response=await axios.get(`https://testsdk.onrender.com/campaigns//getCampaignsForUser?MMID=${MMID}`, {
         headers: {
-            'Authorization': `Bearer ${getAuthToken()}`
+            'x-api-key': `${getAuthToken()}`
         }})
     return response.data;    
 }catch(error){
@@ -238,10 +258,11 @@ async function smartTrigger(MMID, eventName) {
         if (userCampaignList && userCampaignList.length > 0) {
             for (let i = 0; i < userCampaignList.length; i++) {
                 let campaign = await getParticularCampaign(userCampaignList[i]);
-                
+
 
                 if (campaign.imageURL && campaign.event === eventName) {
                     console.log("Matched Campaign:", campaign.segment_id);
+                    updateAnalytics(campaign.segment_id);
                     ShowOSM(campaign.imageURL)
                     return campaign.imageURL; // Directly return the imageURL
                 }
@@ -397,5 +418,6 @@ module.exports = {
     getParticularCampaign:wrapWithQueue(getParticularCampaign),
     smartTrigger:wrapWithQueue(smartTrigger),
     ShowOSM: wrapWithQueue(ShowOSM),
+    updateAnalytics:wrapWithQueue(updateAnalytics),
     getQueueSize: () => requestQueue.getQueueSize()
 };

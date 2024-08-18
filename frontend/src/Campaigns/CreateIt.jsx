@@ -23,7 +23,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../Supabase/supabaseClient.js'; // Import the initialized Supabase client
 
-
+import axios from 'axios'
 
 async function postCampaign(type,event,description,name,imageURL){
   
@@ -38,7 +38,7 @@ async function postCampaign(type,event,description,name,imageURL){
           imageURL:imageURL
       }, {
           headers: {
-              'Authorization': `Bearer ${getAuthToken()}`
+                'x-api-key': `123`
           }});
      
 

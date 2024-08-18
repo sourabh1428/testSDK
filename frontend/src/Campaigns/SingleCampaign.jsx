@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Box, Heading, Text, Image, Skeleton, Container, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, Flex } from '@chakra-ui/react';
 
 import moment from 'moment-timezone';
-
+import axios from 'axios'
 
 async function getParticularCampaign(data) {
   try {
@@ -11,7 +11,7 @@ async function getParticularCampaign(data) {
       cid: data
     }, {
       headers: {
-          'Authorization': `Bearer ${getAuthToken()}`
+           'x-api-key': `123`
       }});
     return response.data; // Return the actual data
   } catch (error) {
@@ -91,7 +91,7 @@ const SingleCampaign = () => {
           <>
             <Heading mb={4} size="lg">{campaign.name}</Heading>
             <Text fontSize="lg" mb={2}>Type: {campaign.type}</Text>
-            <Text fontSize="lg" mb={2}>Type: {campaign.event}</Text>
+            <Text fontSize="lg" mb={2}>Event name: {campaign.event}</Text>
             <Text fontSize="md" mb={4}>Description: {campaign.description || "No description available"}</Text>
             <Image
               src={campaign.imageURL}
@@ -102,6 +102,23 @@ const SingleCampaign = () => {
               objectFit="cover"
               mb={4}
             />
+          <Box mt={8} p={4} borderRadius="md" bg="gray.50" boxShadow="base" w="full">
+  <Flex justify="space-between" align="center">
+    <Text fontSize="xl" fontWeight="bold" color="teal.600">Analytics</Text>
+    <Box
+      bg="teal.500"
+      color="white"
+      px={4}
+      py={2}
+      borderRadius="full"
+      fontSize="lg"
+      fontWeight="bold"
+      boxShadow="sm"
+    >
+      Impressions: {campaign.analytics?.impression || 0}
+    </Box>
+  </Flex>
+</Box>
             <Flex
               direction="row"
               justify="flex-end"

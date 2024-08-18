@@ -7,7 +7,7 @@ async function getAllUsers() {
   try {
       const response = await fetch("https://testsdk.onrender.com/users", {
         headers: {
-          'api-x-key': `123`
+         'x-api-key': `123`
       }});
       if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
