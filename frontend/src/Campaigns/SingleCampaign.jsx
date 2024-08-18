@@ -1,9 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Heading, Text, Image, Skeleton, Container, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, Flex } from '@chakra-ui/react';
-import { getParticularCampaign } from 'user-sdk-1428';
+
 import moment from 'moment-timezone';
 
+
+async function getParticularCampaign(data) {
+  try {
+    const response = await axios.post("https://testsdk.onrender.com/campaigns/getParticularCampaign", {
+      cid: data
+    }, {
+      headers: {
+          'Authorization': `Bearer ${getAuthToken()}`
+      }});
+    return response.data; // Return the actual data
+  } catch (error) {
+    console.error("Error fetching campaign:", error); // Log the error
+    throw error; // Optionally, rethrow the error if you want to handle it further up the chain
+  }
+}
 const SingleCampaign = () => {
   const { cid } = useParams();
   const [campaign, setCampaign] = useState(null);

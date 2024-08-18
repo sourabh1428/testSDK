@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { getAllCampaigns } from 'user-sdk-1428';
+
 import { Box, Container, Heading, Text, IconButton, Stack, Image, Center, Skeleton, SkeletonText } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode'; // Correct import
@@ -7,6 +7,32 @@ import CreateCampaign from './../Campaigns/CreateCampaign';
 import { motion } from 'framer-motion';
 import debounce from 'lodash.debounce';
 import { FaSortUp, FaSortDown, FaSearch } from 'react-icons/fa';
+
+import axios from 'axios'
+
+
+async function getAllCampaigns(){
+  try{
+
+      const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign", {
+          headers: {
+              'api-x-key': `123`
+          }});
+  
+      const campaigns = await response.data;
+      console.log(campaigns);
+      return campaigns;
+
+
+  }catch(error){
+      console.log(error);
+  }
+}
+
+
+
+
+
 
 // Define a motion.div for animations
 const MotionBox = motion(Box);
@@ -19,6 +45,16 @@ const AllCampaign = () => {
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1); // For pagination
   const navigate = useNavigate();
+
+
+
+
+
+
+
+
+
+
 
   const isTokenExpired = () => {
     const token = localStorage.getItem('token');

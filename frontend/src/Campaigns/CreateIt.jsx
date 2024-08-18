@@ -19,9 +19,47 @@ import {
 } from '@chakra-ui/react';
 import { FiCheckCircle } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import { postCampaign } from 'user-sdk-1428';
+
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../Supabase/supabaseClient.js'; // Import the initialized Supabase client
+
+
+
+async function postCampaign(type,event,description,name,imageURL){
+  
+  try{
+
+
+      const response = await axios.post("https://testsdk.onrender.com/campaigns/postCampaign",{
+          type:type,
+          event:event,
+          description:description,
+          name:name,
+          imageURL:imageURL
+      }, {
+          headers: {
+              'Authorization': `Bearer ${getAuthToken()}`
+          }});
+     
+
+      let users=await UIS(response.data);
+      const campaigns = await response.data;
+      if(users && campaigns){
+      console.log("Campaign created successfully",users);
+  }
+      return campaigns;
+
+
+  }catch(error){
+      console.log(error);
+  }
+
+
+
+}
+
+
+
 
 const MultiStepForm = () => {
   const [step, setStep] = useState(1);

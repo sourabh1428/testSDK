@@ -1,7 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import {getAllUsers} from 'user-sdk-1428'
+
 import { Spinner } from '@chakra-ui/react'
+
+async function getAllUsers() {
+  try {
+      const response = await fetch("https://testsdk.onrender.com/users", {
+        headers: {
+          'api-x-key': `123`
+      }});
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const users = await response.json();
+      console.log(users);
+      return users;
+  } catch (error) {
+      console.error("Error fetching users:", error);
+  }
+}
 
 const Allusers = () => {
     const [data, setData] = useState([]);

@@ -191,7 +191,45 @@ router.get('/getCampaignsForUser', async function(req, res) {
 
 
 
+router.post('/updateAnalytics', async function(req, res) {
+    const cid = req.body.cid;
 
+    try {
+        // Find the campaign by segment_id
+        const campaign = await client.db('test_db').collection("campaigns").findOne({ segment_id: cid });
+
+        if (campaign) {
+            // Check if the analytics object exists
+            if (!campaign.analytics) {
+                // If analytics doesn't exist, create it with impression set to 1
+                campaign.analytics = { impression: 1 };
+            } else {
+                // If analytics exists, increase the impression count by 1
+                if (campaign.analytics.impression) {
+                    campaign.analytics.impression += 1;
+                } else {
+                    // If impression doesn't exist, initialize it to 1
+                    campaign.analytics.impression = 1;
+                }
+            }
+
+            // Update the campaign with the new analytics data
+            await client.db('test_db').collection("campaigns").updateOne(
+                { segment_id: cid },
+                { $set: { analytics: campaign.analytics } }
+            );
+
+            // Send the updated campaign data as a response
+            return res.status(200).json({ message: "Campaign updated", campaign });
+        } else {
+            // If the campaign is not found, return a 404 status code
+            return res.status(404).json({ message: "Campaign not found" });
+        }
+    } catch (err) {
+        // If there's an error, return a 500 status code with the error message
+        return res.status(500).json({ message: "Couldn't update the analytics" });
+    }
+});
 
 
 

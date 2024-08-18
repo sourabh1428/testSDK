@@ -20,26 +20,38 @@ ChartJS.register(
   CategoryScale,
   LinearScale
 );
-
 const ChartComponent = ({ eventName }) => {
   const [eventData, setEventData] = useState([]);
 
+  
   useEffect(() => {
     const fetchEventData = async () => {
       try {
-        const response = await axios.post('http://localhost:3000/events/getEvents', {
-          eName: eventName,
+        const response = await fetch('https://testsdk.onrender.com/events/getEvents', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': '123', // Ensure this key is correct
+          },
+          body: JSON.stringify({ eName: eventName }),
         });
 
-        setEventData(response.data.data);
-        console.log('Data fetched successfully:', response.data.data);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setEventData(data.data);
+        console.log('Data fetched successfully:', data.data);
       } catch (error) {
         console.error('There has been a problem with your request:', error);
       }
     };
 
     fetchEventData();
-  }, [eventName]);
+}, [eventName]);
+
+  // Render your component
 
   // Process data
   const processData = () => {
@@ -142,6 +154,6 @@ const ChartComponent = ({ eventName }) => {
       <Line data={data} options={options} />
     </div>
   );
-};
+}
 
 export default ChartComponent;

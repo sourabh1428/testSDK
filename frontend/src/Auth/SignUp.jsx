@@ -19,22 +19,27 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Show loading animation
-
+    setLoading(true);
+  
     try {
       const response = await fetch('http://localhost:3000/auth/signup', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': '123'
+        },
         body: JSON.stringify(formData),
       });
-
+  
       const result = await response.json();
+      console.log(result);
+  
       if (result.success) {
         setSuccess('Sign-up successful!');
         setError('');
         toast({
           title: 'Success',
-          description: 'Account created successfully. Please sign in.',
+          description: 'Verification request sent to admin , Please sign in after getting verified.',
           status: 'success',
           duration: 5000,
           isClosable: true,
@@ -48,9 +53,10 @@ const SignUp = () => {
       setError('An error occurred');
       setSuccess('');
     } finally {
-      setLoading(false); // Hide loading animation
+      setLoading(false);
     }
   };
+  
 
   return (
     <Container maxW="md" p={4} centerContent>
@@ -66,8 +72,26 @@ const SignUp = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
       >
+        
+
+
+
         <Text fontSize="2xl" mb={6} textAlign="center">Sign Up</Text>
         <form onSubmit={handleSubmit}>
+
+
+        <FormControl mb={4}>
+            <FormLabel>User Name</FormLabel>
+            <Input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="User Name"
+              required
+            />
+
+            </FormControl>
           <FormControl mb={4}>
             <FormLabel>Email</FormLabel>
             <Input

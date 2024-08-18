@@ -1,10 +1,22 @@
 // src/UserActivity.js
 import React, { useEffect, useState } from 'react';
-import { getUserEvents } from 'user-sdk-1428';
+
 import { useParams } from 'react-router-dom';
 import './UserActivity.css';
 import { Spinner } from '@chakra-ui/react'
 
+async function getUserEvents(MMID) {
+  try {
+      const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`, {
+          headers: {
+              'api-x-key': `123`
+          }});
+      console.log(response.data);
+      return response.data;
+  } catch (error) {
+      console.log(error);
+  }
+}
 const UserActivity = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);

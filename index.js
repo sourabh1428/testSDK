@@ -25,7 +25,7 @@ const apiLimiter = rateLimit({
 
 // Apply rate limiter to all requests
 router.use(apiLimiter);
-app.use('/auth', validateApiKey,authRoute);
+
 
 const routes = require('./routes/users.js');
 
@@ -38,7 +38,7 @@ const { validate } = require('./Modal.js');
 // Use routes
 
 
-
+app.use('/auth', validateApiKey,authRoute);
 app.use('/',validateApiKey,routes);
 app.use('/events',validateApiKey, eventRoutes);
 app.use('/campaigns',validateApiKey ,campaignRoutes);

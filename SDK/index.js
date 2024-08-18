@@ -84,6 +84,7 @@ async function addEventByUser(MMID, eventName) {
                 'Authorization': `Bearer ${getAuthToken()}`
             }});
         let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
+        
         await ShowOSM(campaignData);
         
         return campaignData;

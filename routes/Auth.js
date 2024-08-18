@@ -71,7 +71,7 @@ router.post('/signup', async (req, res) => {
     console.log('Token generated:', token);
 
     // Send response with token
-    res.status(201).json({ token });
+    res.status(201).json({  success: true,token });
   } catch (err) {
     console.error('Error:', err);
     res.status(500).json({ error: 'Something went wrong' });
