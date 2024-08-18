@@ -5,8 +5,8 @@ const router = express.Router();
 const {authenticateJWT}= require('./middleware');
 const rateLimit = require('express-rate-limit');
 const app = express();
-
-
+const authRoute = require('./routes/Auth.js');
+const validateApiKey = require('./routes/DBauth.js');
 
 
 const port = 3000;
@@ -25,25 +25,24 @@ const apiLimiter = rateLimit({
 
 // Apply rate limiter to all requests
 router.use(apiLimiter);
+app.use('/auth', validateApiKey,authRoute);
 
 const routes = require('./routes/users.js');
 
 const eventRoutes=require('./routes/events.js');
 
 const campaignRoutes = require('./routes/campaign.js');
+const { validate } = require('./Modal.js');
 
-const authRoute=require('./routes/Auth.js');
-
-const auth=require('./middleware');
 
 // Use routes
 
 
 
-app.use('/', routes);
-app.use('/events', eventRoutes);
-app.use('/campaigns' ,campaignRoutes);
-app.use('/auth',authRoute );
+app.use('/',validateApiKey,routes);
+app.use('/events',validateApiKey, eventRoutes);
+app.use('/campaigns',validateApiKey ,campaignRoutes);
+app.use('/auth',validateApiKey,authRoute );
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

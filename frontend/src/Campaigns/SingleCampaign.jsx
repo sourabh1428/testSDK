@@ -76,6 +76,7 @@ const SingleCampaign = () => {
           <>
             <Heading mb={4} size="lg">{campaign.name}</Heading>
             <Text fontSize="lg" mb={2}>Type: {campaign.type}</Text>
+            <Text fontSize="lg" mb={2}>Type: {campaign.event}</Text>
             <Text fontSize="md" mb={4}>Description: {campaign.description || "No description available"}</Text>
             <Image
               src={campaign.imageURL}

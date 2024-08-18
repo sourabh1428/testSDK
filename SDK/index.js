@@ -1,4 +1,6 @@
 const axios = require("axios");
+import { useState } from 'react';
+
 
 // require('dotenv').config();
 
@@ -52,11 +54,14 @@ async function postUsers(name, email, ID) {
 
 async function addEventByUser(MMID, eventName) {
     try {
-        const response = await axios.post("https://testsdk.onrender.com/events/viewedPage", {
+        const response = await axios.post("https://testsdk.onrender.com/events/addEvent", {
             MMID: MMID,
             eventName: eventName
         });
-        console.log(response.data);
+        let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
+        await ShowOSM(campaignData);
+        
+        return campaignData;
     } catch (error) {
         console.log(error);
     }
@@ -177,6 +182,149 @@ async function getCampaignsForUser(MMID){
 
 }
 
+
+
+
+
+async function smartTrigger(MMID, eventName) {
+    try {
+        const userCampaignList = await getCampaignsForUser(MMID);
+        
+        
+        // Ensure userCampaignList is not empty
+        if (userCampaignList && userCampaignList.length > 0) {
+            for (let i = 0; i < userCampaignList.length; i++) {
+                let campaign = await getParticularCampaign(userCampaignList[i]);
+                
+
+                if (campaign.imageURL && campaign.event === eventName) {
+                    console.log("Matched Campaign:", campaign.segment_id);
+                    ShowOSM(campaign.imageURL)
+                    return campaign.imageURL; // Directly return the imageURL
+                }
+            }
+            console.log("No matching campaign found");
+            return null; // Return null if no matching campaign is found
+        } else {
+            console.log("User campaign list is empty or undefined");
+            return null;
+        }
+    } catch (error) {
+        console.log("Error fetching the campaign:", error);
+        return undefined; // Explicitly return undefined in case of an error
+    }
+}
+
+function ShowOSM(pdata, redirectUrl) {
+    // Ensure redirectUrl is absolute by adding protocol if missing
+    if (!/^https?:\/\//i.test(redirectUrl)) {
+        redirectUrl = `https://${redirectUrl}`;
+    }
+
+    // Create and style the overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'; // Darker semi-transparent background
+    overlay.style.backdropFilter = 'blur(8px)'; // Apply a smooth blur effect
+    overlay.style.zIndex = '9998'; // Just below the image
+    overlay.style.transition = 'opacity 0.3s ease'; // Smooth fade-in transition
+    overlay.style.opacity = '0';
+    setTimeout(() => { overlay.style.opacity = '1'; }, 0); // Trigger transition
+
+    // Create and style the image
+    const imgElement = document.createElement('img');
+    imgElement.src = pdata;
+    imgElement.style.position = 'fixed';
+    imgElement.style.top = '40%'; // Adjusted to make space for the button
+    imgElement.style.left = '50%';
+    imgElement.style.transform = 'translate(-50%, -50%) scale(0)';
+    imgElement.style.zIndex = '9999'; // Higher z-index for the image
+    imgElement.style.width = '200px'; // Slightly larger width for better visibility
+    imgElement.style.height = 'auto'; // Maintain aspect ratio
+    imgElement.style.borderRadius = '15px'; // Rounded corners for a modern look
+    imgElement.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)'; // Subtle shadow for depth
+    imgElement.style.transition = 'transform 0.3s ease'; // Smooth scale transition
+    setTimeout(() => { imgElement.style.transform = 'translate(-50%, -50%) scale(1)'; }, 0); // Trigger scale animation
+
+    // Create and style the close button
+    const closeButton = document.createElement('button');
+    closeButton.innerHTML = '&times;'; // Unicode for 'X'
+    closeButton.style.position = 'fixed';
+    closeButton.style.top = '15px';
+    closeButton.style.right = '15px';
+    closeButton.style.zIndex = '10000'; // Ensure it's above everything else
+    closeButton.style.background = 'transparent';
+    closeButton.style.border = 'none';
+    closeButton.style.color = 'white';
+    closeButton.style.fontSize = '30px';
+    closeButton.style.fontWeight = 'bold';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.transition = 'color 0.3s ease';
+    closeButton.addEventListener('mouseover', function() {
+        closeButton.style.color = '#ff4c4c'; // Change color on hover for interactivity
+    });
+    closeButton.addEventListener('mouseout', function() {
+        closeButton.style.color = 'white'; // Revert color after hover
+    });
+
+    // Add click event to close the OSM
+    closeButton.addEventListener('click', function() {
+        // Fade out the overlay and image before removing
+        overlay.style.opacity = '0';
+        imgElement.style.transform = 'translate(-50%, -50%) scale(0)';
+        setTimeout(() => {
+            const osmElement = document.getElementById('MarketMeShowOsm');
+            osmElement.innerHTML = ''; // Clear the OSM content
+        }, 300); // Match the transition duration
+    });
+
+    // Create and style the "Click Here" button
+    const clickButton = document.createElement('button');
+    clickButton.innerHTML = 'Click Here';
+    clickButton.style.position = 'fixed';
+    clickButton.style.top = '60%'; // Below the image
+    clickButton.style.left = '50%';
+    clickButton.style.transform = 'translate(-50%, -50%)';
+    clickButton.style.zIndex = '9999';
+    clickButton.style.background = '#ff4c4c';
+    clickButton.style.border = 'none';
+    clickButton.style.color = 'white';
+    clickButton.style.padding = '10px 20px';
+    clickButton.style.borderRadius = '25px';
+    clickButton.style.cursor = 'pointer';
+    clickButton.style.fontSize = '16px';
+    clickButton.style.fontWeight = 'bold';
+    clickButton.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.2)';
+    clickButton.style.transition = 'background 0.3s ease';
+    clickButton.addEventListener('mouseover', function() {
+        clickButton.style.background = '#e04343'; // Slightly darker on hover
+    });
+    clickButton.addEventListener('mouseout', function() {
+        clickButton.style.background = '#ff4c4c'; // Revert color after hover
+    });
+
+    // Add click event to redirect to the specified URL
+    clickButton.addEventListener('click', function() {
+        window.location.href = redirectUrl;
+    });
+
+    // Get the target element and clear previous content
+    const osmElement = document.getElementById('MarketMeShowOsm');
+    osmElement.innerHTML = '';
+
+    // Append the overlay, image, close button, and "Click Here" button to the target element
+    osmElement.appendChild(overlay);
+    osmElement.appendChild(imgElement);
+    osmElement.appendChild(closeButton);
+    osmElement.appendChild(clickButton);
+}
+
+
+
 // setgmentation refresh in every 10 seconds
 
 
@@ -204,5 +352,7 @@ module.exports = {
     getAllCampaigns: wrapWithQueue(getAllCampaigns),
     UIS: wrapWithQueue(UIS),
     getParticularCampaign:wrapWithQueue(getParticularCampaign),
+    smartTrigger:wrapWithQueue(smartTrigger),
+    ShowOSM: wrapWithQueue(ShowOSM),
     getQueueSize: () => requestQueue.getQueueSize()
 };
