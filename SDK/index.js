@@ -8,6 +8,20 @@ const RequestQueue = require("./requestHandler");
 
 const requestQueue = new RequestQueue(); // Set interval to 2000ms
 
+
+
+
+
+
+
+function getAuthToken() {
+    // Replace this with your actual method to retrieve the token
+    return '123'; // For example purposes
+}
+
+
+
+
 function wrapWithQueue(func) {
     return async function(...args) {
         return new Promise((resolve, reject) => {
@@ -26,7 +40,11 @@ function wrapWithQueue(func) {
 // Configure Bottleneck
 async function getAllUsers() {
     try {
-        const response = await fetch("https://testsdk.onrender.com/users");
+        const response = await fetch("https://testsdk.onrender.com/users", {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
+        });
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -44,6 +62,10 @@ async function postUsers(name, email, ID) {
             name: name,
             email: email,
             ID: ID
+        }, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
         });
 
         console.log("User added successfully:", response.data);
@@ -57,7 +79,10 @@ async function addEventByUser(MMID, eventName) {
         const response = await axios.post("https://testsdk.onrender.com/events/addEvent", {
             MMID: MMID,
             eventName: eventName
-        });
+        }, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }});
         let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
         await ShowOSM(campaignData);
         
@@ -69,7 +94,10 @@ async function addEventByUser(MMID, eventName) {
 
 async function getUserEvents(MMID) {
     try {
-        const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`);
+        const response = await axios.get(`https://testsdk.onrender.com/events/userEvents?MMID=${MMID}`, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }});
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -81,7 +109,10 @@ async function getUserEvents(MMID) {
 async function getAllCampaigns(){
     try{
 
-        const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign");
+        const response = await axios.get("https://testsdk.onrender.com/campaigns/getAllCampaign", {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }});
     
         const campaigns = await response.data;
         console.log(campaigns);
@@ -97,7 +128,10 @@ async function getParticularCampaign(data) {
     try {
       const response = await axios.post("https://testsdk.onrender.com/campaigns/getParticularCampaign", {
         cid: data
-      });
+      }, {
+        headers: {
+            'Authorization': `Bearer ${getAuthToken()}`
+        }});
       return response.data; // Return the actual data
     } catch (error) {
       console.error("Error fetching campaign:", error); // Log the error
@@ -116,7 +150,10 @@ async function postCampaign(type,event,description,name,imageURL){
             description:description,
             name:name,
             imageURL:imageURL
-        });
+        }, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }});
        
 
         let users=await UIS(response.data);
@@ -148,7 +185,9 @@ async function UIS(segment_id){
               let allUser=  fetch(`https://testsdk.onrender.com/campaigns/UIS/${segment_id}`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                         'Authorization': `Bearer ${getAuthToken()}`
+
                     },
                     body: JSON.stringify({ some: 'data' })
                 })
@@ -173,7 +212,10 @@ async function UIS(segment_id){
 
 async function getCampaignsForUser(MMID){
     try{
-    const response=await axios.get(`https://testsdk.onrender.com/campaigns//getCampaignsForUser?MMID=${MMID}`)
+    const response=await axios.get(`https://testsdk.onrender.com/campaigns//getCampaignsForUser?MMID=${MMID}`, {
+        headers: {
+            'Authorization': `Bearer ${getAuthToken()}`
+        }})
     return response.data;    
 }catch(error){
         
