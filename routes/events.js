@@ -116,7 +116,7 @@ router.post('/getEvents', async function (req, res) {
     console.log(event);
     
     const db = client.db('test_db');
-    const eventCollection = await db.collection('viewed_page').find({}).toArray();
+    const eventCollection = await db.collection('all_events_done').find({}).toArray();
     
 
     try {
