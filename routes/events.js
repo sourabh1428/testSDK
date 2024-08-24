@@ -1,11 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const { createClient } = require('redis'); // Import from redis package
+require('dotenv').config();
 
-const { MongoClient, ServerApiVersion , ObjectId } = require('mongodb');
+// Redis connection
+const redisClient = createClient({
+    password: process.env.redis_password,
+    socket: {
+        host: 'redis-16608.c273.us-east-1-2.ec2.redns.redis-cloud.com',
+        port: 16608
+    }
+});
+
 // MongoDB connection
-require('dotenv').config()
-
-
 const uri = process.env.MONGODB_URI;
 const client = new MongoClient(uri, {
   serverApi: {
@@ -25,11 +33,21 @@ async function connectToMongoDB() {
   }
 }
 
+// Ensure Redis client connects
+async function connectToRedis() {
+  try {
+    await redisClient.connect();
+    console.log("Successfully connected to Redis!");
+  } catch (error) {
+    console.error("Error connecting to Redis:", error);
+  }
+}
+
 connectToMongoDB();
+connectToRedis();
 router.post('/addEvent', async function (req, res) {
     try {
-        const db = client.db('test_db');
-        const collection = db.collection('viewed_page');
+       
         let userEventDone = req.body;
         const eventTime = Math.floor(Date.now() / 1000); // Add creation time in epoch format
         userEventDone.EventTime = eventTime; // Add event time to the userEventDone object
@@ -38,32 +56,25 @@ router.post('/addEvent', async function (req, res) {
         const eventName = userEventDone.eventName; // Assuming eventName is part of the request body
         const eventEntry = { eventTime, eventName }; // Create an event entry object
 
-        const userEvent = db.collection('userEvent');
+        // Fetch existing events from Redis
+        let existingEvents = await redisClient.hGet(`userEvents`, id);
+        existingEvents = existingEvents ? JSON.parse(existingEvents) : [];
 
-        // Check if user exists and update or insert accordingly
-        const user = await userEvent.findOne({ MMID: id });
-        if (user) {
-            await userEvent.updateOne(
-                { MMID: id },
-                { $push: { events: eventEntry } }
-            );
-        } else {
-            await userEvent.insertOne({
-                MMID: id,
-                events: [eventEntry]
-            });
-        }
+        // Add new event to the existing events array
+        existingEvents.push(eventEntry);
 
-        // Insert the event into the viewed_page collection
-        await collection.insertOne(userEventDone);
+        // Store the updated events array in Redis
+        await redisClient.hSet(`userEvents`, id, JSON.stringify(existingEvents));
 
-        console.log("User event inserted: ", user);
-        res.status(201).json({ message: "Event added successfully to backend" });
+        console.log("Event cached in Redis", eventEntry);
+
+        res.status(201).json({ message: "Event added successfully to redis" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
+
 
 
 

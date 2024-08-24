@@ -14,10 +14,11 @@
     "mongodb": "^6.7.0",
     "mongoose": "^8.5.2",
     "nodemon": "^3.1.4",
+    "redis": "^4.7.0",
     "user-sdk-1428": "file:"
   },
   "name": "user-sdk-1428",
-  "version": "1.0.48",
+  "version": "1.0.49",
   "description": "this is for testing purposes",
   "main": "./SDK/index.js",
   "keywords": [

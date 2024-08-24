@@ -66,3 +66,40 @@ app.listen(port, () => {
 // setInterval(() => {
 //   hue();
 // }, 10000);
+
+
+
+
+
+// redis
+
+
+const redis = require('redis');
+const client = redis.createClient({ url: 'redis://localhost:6379' });
+
+client.on('error', (err) => console.log('Redis Client Error', err));
+
+const addEventToQueue = async (event) => {
+  try {
+    await client.lPush('eventsQueue', JSON.stringify(event));
+  } catch (error) {
+    console.error('Error adding event to queue:', error);
+  }
+};
+
+const processEvents = async () => {
+  try {
+    const events = await client.lRange('eventsQueue', 0, -1);
+    if (events.length > 0) {
+      // Process events
+      for (const event of events) {
+        const parsedEvent = JSON.parse(event);
+        // Handle the event
+      }
+      // Clear the queue after processing
+      await client.del('eventsQueue');
+    }
+  } catch (error) {
+    console.error('Error processing events:', error);
+  }
+};

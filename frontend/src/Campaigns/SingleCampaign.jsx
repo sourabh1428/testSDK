@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Heading, Text, Image, Skeleton, Container, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, Flex, Button } from '@chakra-ui/react';
+import { Box, Heading, Text, Image, SkeletonText ,Skeleton, Container, Stack, Alert, AlertIcon, AlertTitle, AlertDescription, Flex, Button, VStack, Icon } from '@chakra-ui/react';
 import moment from 'moment-timezone';
 import axios from 'axios';
+import { FaCalendarAlt, FaTrashAlt } from 'react-icons/fa';
 
 async function getParticularCampaign(data) {
   try {
@@ -63,7 +64,12 @@ const SingleCampaign = () => {
   }, [cid]);
 
   const formatDate = (epochTime) => {
-    return moment.unix(epochTime).tz('Asia/Kolkata').format('DD MMM YYYY, hh:mm A');
+    const formatDate = (epochTime) => {
+      // Check if epochTime is in milliseconds and convert it to seconds
+      const timeInSeconds = epochTime > 10000000000 ? epochTime / 1000 : epochTime;
+      return moment.unix(timeInSeconds).tz('Asia/Kolkata').format('DD MMM YYYY, hh:mm A');
+    };
+    
   };
 
   const handleDelete = async () => {
@@ -103,31 +109,28 @@ const SingleCampaign = () => {
         overflow="hidden"
         p={4}
         bg="white"
-        boxShadow="md"
+        boxShadow="lg"
       >
         {loading ? (
           <Stack spacing={4} w="full" align="center">
-            <Skeleton height="200px" width="full" />
-            <Skeleton height="20px" width="80%" />
-            <Skeleton height="20px" width="60%" />
-            <Skeleton height="20px" width="40%" />
+            <Skeleton height="300px" width="full" />
+            <SkeletonText mt="4" noOfLines={4} spacing="4" />
           </Stack>
         ) : (
-          <>
+          <VStack spacing={4} align="stretch" w="full">
             <Heading mb={4} size="lg">{campaign.name}</Heading>
-            <Text fontSize="lg" mb={2}>Type: {campaign.type}</Text>
-            <Text fontSize="lg" mb={2}>Event name: {campaign.event}</Text>
-            <Text fontSize="md" mb={4}>Description: {campaign.description || "No description available"}</Text>
+            <Text fontSize="lg" color="gray.600">Type: {campaign.type}</Text>
+            <Text fontSize="lg" color="gray.600">Event name: {campaign.event}</Text>
+            <Text fontSize="md" color="gray.700" mb={4}>{campaign.description || "No description available"}</Text>
             <Image
-              src={campaign.imageURL}
+              src={campaign.imageURL || 'path/to/default-image.jpg'}
               alt={campaign.name}
               borderRadius="md"
-              fallbackSrc="path/to/default-image.jpg"
-              boxSize="300px" // Fixed size for medium image
+              boxSize="300px"
               objectFit="cover"
               mb={4}
             />
-            <Box mt={8} p={4} borderRadius="md" bg="gray.50" boxShadow="base" w="full">
+            <Box p={4} borderRadius="md" bg="gray.50" boxShadow="md" w="full">
               <Flex justify="space-between" align="center">
                 <Text fontSize="xl" fontWeight="bold" color="teal.600">Analytics</Text>
                 <Box
@@ -146,17 +149,19 @@ const SingleCampaign = () => {
             </Box>
             <Flex
               direction="row"
-              justify="flex-end"
-              align="flex-end"
+              justify="space-between"
+              align="center"
               w="full"
-              position="absolute"
-              bottom="10px"
-              right="10px"
             >
-              <Text fontSize="sm" color="gray.500" mr={4}>Created At: {formatDate(campaign.createdAt)}</Text>
-              <Button colorScheme="red" onClick={handleDelete}>Delete Campaign</Button>
+              <Flex align="center">
+                <Icon as={FaCalendarAlt} color="gray.500" mr={2} />
+                <Text fontSize="sm" color="gray.500">{formatDate(campaign.createdAt)}</Text>
+              </Flex>
+              <Button colorScheme="red" leftIcon={<FaTrashAlt />} onClick={handleDelete}>
+                Delete Campaign
+              </Button>
             </Flex>
-          </>
+          </VStack>
         )}
       </Flex>
     </Container>
