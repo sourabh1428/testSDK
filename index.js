@@ -46,7 +46,7 @@ app.use('/auth',validateApiKey,authRoute );
 
 
 app.use('/keep-alive',(req,res)=>{
-  res.send("I'm Alive");
+  res.json({"data":"Main server is Alive"});
 })
 
 app.listen(port, () => {
