@@ -43,6 +43,12 @@ app.use('/',validateApiKey,routes);
 app.use('/events',validateApiKey, eventRoutes);
 app.use('/campaigns',validateApiKey ,campaignRoutes);
 app.use('/auth',validateApiKey,authRoute );
+
+
+app.use('/keep-alive',(req,res)=>{
+  res.send("I'm Alive");
+})
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

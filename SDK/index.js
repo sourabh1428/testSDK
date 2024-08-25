@@ -83,9 +83,9 @@ async function addEventByUser(MMID, eventName) {
             headers: {
          'x-api-key': `${getAuthToken()}`
             }});
-        let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
+        // let campaignData=await smartTrigger(MMID,eventName); // Trigger OSM after event is created
 
-        if(campaignData)await ShowOSM(campaignData);
+        // if(campaignData)await ShowOSM(campaignData);
         
         return campaignData;
     } catch (error) {
@@ -115,11 +115,8 @@ async function getAllCampaigns(){
               'x-api-key': `${getAuthToken()}`
             }});
     
-        const campaigns = await response.data;
-        console.log(campaigns);
-        return campaigns;
-
-
+        let allCampaignsData = await response.data;
+        localStorage.setItem('campaigns', JSON.stringify(allCampaignsData)); // Store as JSON string
     }catch(error){
         console.log(error);
     }
@@ -279,12 +276,19 @@ async function smartTrigger(MMID, eventName) {
     }
 }
 
-function ShowOSM(pdata, redirectUrl) {
+async function ShowOSM(eventName) {
+    let cdata=JSON.parse(localStorage.getItem("campaigns"));
+    let req=cdata.filter((e)=>e.event===eventName);
+    
+    let redirectUrl="www.google.com"
+    let pdata=req[0].imageURL;
+    if(pdata){
     // Ensure redirectUrl is absolute by adding protocol if missing
     if (!/^https?:\/\//i.test(redirectUrl)) {
         redirectUrl = `https://${redirectUrl}`;
     }
 
+    
     // Create and style the overlay
     const overlay = document.createElement('div');
     overlay.style.position = 'fixed';
@@ -385,8 +389,9 @@ function ShowOSM(pdata, redirectUrl) {
     osmElement.appendChild(imgElement);
     osmElement.appendChild(closeButton);
     osmElement.appendChild(clickButton);
+    await updateAnalytics(req[0].segment_id);
 }
-
+}
 
 
 // setgmentation refresh in every 10 seconds
@@ -396,6 +401,70 @@ function ShowOSM(pdata, redirectUrl) {
     
 
     // UIS()
+
+
+
+
+
+
+
+// initialize click tracking
+
+
+/**
+ * Initializes cursor tracking for a specified element.
+ * @param {string} elementId - The ID of the element to track the cursor within.
+ */
+function initializeCursorTracking(elementId) {
+    const trackingElement = document.getElementById(elementId);
+    if (!trackingElement) {
+        console.error(`Element with ID ${elementId} not found.`);
+        return;
+    }
+
+    const cursor = document.createElement('div');
+    cursor.style.position = 'absolute';
+    cursor.style.width = '10px';
+    cursor.style.height = '10px';
+    cursor.style.backgroundColor = 'red';
+    cursor.style.borderRadius = '50%';
+    cursor.style.pointerEvents = 'none'; // Prevents the cursor from interfering with interactions
+    trackingElement.appendChild(cursor);
+
+    function handleMouseMove(event) {
+        const rect = trackingElement.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        cursor.style.left = `${x}px`;
+        cursor.style.top = `${y}px`;
+    }
+
+    function handleMouseOut() {
+        console.log('Mouse left the tracking area!');
+    }
+
+    trackingElement.addEventListener('mousemove', handleMouseMove);
+    trackingElement.addEventListener('mouseout', handleMouseOut);
+
+    // Cleanup function
+    return () => {
+        trackingElement.removeEventListener('mousemove', handleMouseMove);
+        trackingElement.removeEventListener('mouseout', handleMouseOut);
+        if (cursor.parentElement) {
+            cursor.parentElement.removeChild(cursor);
+        }
+    };
+}
+
+
+
+
+
+
+
+
+
 
 
   
@@ -419,5 +488,6 @@ module.exports = {
     smartTrigger:wrapWithQueue(smartTrigger),
     ShowOSM: wrapWithQueue(ShowOSM),
     updateAnalytics:wrapWithQueue(updateAnalytics),
+    initializeCursorTracking:wrapWithQueue(initializeCursorTracking),
     getQueueSize: () => requestQueue.getQueueSize()
 };
