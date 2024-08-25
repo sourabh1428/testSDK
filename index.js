@@ -8,8 +8,9 @@ const app = express();
 const authRoute = require('./routes/Auth.js');
 const validateApiKey = require('./routes/DBauth.js');
 
+require('dotenv').config()
 
-const port = 3000;
+const port = process.env.PORT ;
 
 
 
@@ -33,6 +34,7 @@ const eventRoutes=require('./routes/events.js');
 
 const campaignRoutes = require('./routes/campaign.js');
 const { validate } = require('./Modal.js');
+const { configDotenv } = require('dotenv');
 
 
 // Use routes
@@ -80,32 +82,3 @@ app.listen(port, () => {
 // redis
 
 
-const redis = require('redis');
-const client = redis.createClient({ url: 'redis://localhost:6379' });
-
-client.on('error', (err) => console.log('Redis Client Error', err));
-
-const addEventToQueue = async (event) => {
-  try {
-    await client.lPush('eventsQueue', JSON.stringify(event));
-  } catch (error) {
-    console.error('Error adding event to queue:', error);
-  }
-};
-
-const processEvents = async () => {
-  try {
-    const events = await client.lRange('eventsQueue', 0, -1);
-    if (events.length > 0) {
-      // Process events
-      for (const event of events) {
-        const parsedEvent = JSON.parse(event);
-        // Handle the event
-      }
-      // Clear the queue after processing
-      await client.del('eventsQueue');
-    }
-  } catch (error) {
-    console.error('Error processing events:', error);
-  }
-};

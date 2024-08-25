@@ -33,7 +33,7 @@ router.get('/getAllCampaign',async (req,res)=>{
     let allcampaigns=await client.db('test_db').collection("campaigns");
 
     let data=await allcampaigns.find({}).toArray();
-    console.log(data);
+
     res.send(data)
    }catch(error){
     console.log(error);
@@ -257,10 +257,7 @@ router.delete('/deleteCampaign', async function(req, res) {
         // Handle errors and respond with a 500 status code
         console.error("Error deleting campaign and segment:", err);
         return res.status(500).json({ message: "An error occurred while deleting the campaign and segment" });
-    } finally {
-        // Close the database connection
-        await client.close();
-    }
+    } 
 });
 
 

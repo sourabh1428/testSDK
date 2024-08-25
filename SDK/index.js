@@ -481,7 +481,7 @@ module.exports = {
     postUsers: wrapWithQueue(postUsers), 
     addEventByUser: wrapWithQueue(addEventByUser), 
     getUserEvents: wrapWithQueue(getUserEvents),
-    postCampaign: wrapWithQueue(postCampaign),
+   
     getAllCampaigns: wrapWithQueue(getAllCampaigns),
     UIS: wrapWithQueue(UIS),
     getParticularCampaign:wrapWithQueue(getParticularCampaign),
