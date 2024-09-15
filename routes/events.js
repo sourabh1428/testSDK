@@ -33,7 +33,7 @@ async function connectToMongoDB() {
   }
 }
 
-// Ensure Redis client connects
+// Ensure Redis client connects1
 async function connectToRedis() {
   try {
     await redisClient.connect();
