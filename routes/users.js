@@ -54,7 +54,7 @@ router.post('/postUser', async (req, res) => {
 
              const objectId = new ObjectId(); // Create a new ObjectId
 
-            userData._id = objectId; // Set the ObjectId to the _id field
+            userData._id = objectId; // Set the ObjectId2 to the _id field
             userData.Mid = objectId.toString(); // Set the ObjectId to the id field as a string
         const db = client.db('test_db');
         const collection = db.collection('Users');

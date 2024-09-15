@@ -35,23 +35,30 @@ jobs:
         echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> $GITHUB_ENV
         echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
         echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> $GITHUB_ENV
+
+    - name: Print working directory and list files
+      run: |
+        echo "Current directory:"
+        pwd
+        echo "Files in the current directory:"
+        ls -al
+
+    - name: Change Directory and Start Application with PM2
+      run: |
+        cd ~/actions-runner # Change this to the correct directory where your `index.js` is located
+        pm2 start index.js --name index
+        pm2 save
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
         JWT_SECRET: ${{ secrets.JWT_SECRET }}
         REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-
-    - name: Start application with PM2
-      run: pm2 start index.js --name index
-      env:
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-
-    - name: Save PM2 process list
-      run: pm2 save
 
     - name: Verify PM2 processes
-      run: pm2 list
+      run: |
+        cd ~/actions-runner # Ensure you are in the correct directory
+        pm2 list
 
     - name: Output PM2 logs
-      run: pm2 logs
+      run: |
+        cd ~/actions-runner # Ensure you are in the correct directory
+        pm2 logs
