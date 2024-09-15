@@ -39,7 +39,7 @@ async function connectToRedis() {
     await redisClient.connect();
     console.log("Successfully connected to Redis!");
   } catch (error) {
-    console.error("Error connecting to Redis:", error);
+    console.error("Error connecting to Redis", error);
   }
 }
 
