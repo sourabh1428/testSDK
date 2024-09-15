@@ -56,10 +56,10 @@ jobs:
 
     - name: Verify PM2 processes
       run: |
-        cd /home/ubuntu/actions-runner || exit
+       
         pm2 list
 
     - name: Output PM2 logs
       run: |
-        cd /home/ubuntu/actions-runner || exit
+        
         pm2 logs
