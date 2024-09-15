@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18.x]
 
     steps:
     - uses: actions/checkout@v4
@@ -46,7 +46,7 @@ jobs:
     - name: Change Directory and Start Application with PM2
       run: |
         # Change this to the correct directory where your `index.js` is located
-        cd /home/ubuntu/actions-runner || exit
+       
         pm2 start index.js --name index
         pm2 save
       env:
