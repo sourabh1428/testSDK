@@ -38,6 +38,7 @@ jobs:
 
     - name: Print working directory and list files
       run: |
+        cd ~/actions-runner/testSDK
         echo "Current directory:"
         pwd
         echo "Files in the current directory:"
@@ -45,8 +46,7 @@ jobs:
 
     - name: Change Directory and Start Application with PM2
       run: |
-        # Change this to the correct directory where your `index.js` is located
-       
+        cd ~/actions-runner/testSDK
         pm2 start index.js --name index
         pm2 save
       env:
@@ -56,10 +56,10 @@ jobs:
 
     - name: Verify PM2 processes
       run: |
-       
+        cd ~/actions-runner/testSDK
         pm2 list
 
     - name: Output PM2 logs
       run: |
-        
+        cd ~/actions-runner/testSDK
         pm2 logs
