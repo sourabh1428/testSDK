@@ -61,7 +61,7 @@ router.post('/postUser', async (req, res) => {
         console.log(userData);
 
         const result = await collection.insertOne(userData);
-        console.log("User inserted:", result.insertedId);
+        console.log("User Inserted:", result.insertedId);
         res.status(201).json({ message: "User added successfully", userId: result.insertedId });
     
       } catch (error) {
