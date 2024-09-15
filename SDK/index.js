@@ -411,53 +411,6 @@ async function ShowOSM(eventName) {
 // initialize click tracking
 
 
-/**
- * Initializes cursor tracking for a specified element.
- * @param {string} elementId - The ID of the element to track the cursor within.
- */
-function initializeCursorTracking(elementId) {
-    const trackingElement = document.getElementById(elementId);
-    if (!trackingElement) {
-        console.error(`Element with ID ${elementId} not found.`);
-        return;
-    }
-
-    const cursor = document.createElement('div');
-    cursor.style.position = 'absolute';
-    cursor.style.width = '10px';
-    cursor.style.height = '10px';
-    cursor.style.backgroundColor = 'red';
-    cursor.style.borderRadius = '50%';
-    cursor.style.pointerEvents = 'none'; // Prevents the cursor from interfering with interactions
-    trackingElement.appendChild(cursor);
-
-    function handleMouseMove(event) {
-        const rect = trackingElement.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        cursor.style.left = `${x}px`;
-        cursor.style.top = `${y}px`;
-    }
-
-    function handleMouseOut() {
-        console.log('Mouse left the tracking area!');
-    }
-
-    trackingElement.addEventListener('mousemove', handleMouseMove);
-    trackingElement.addEventListener('mouseout', handleMouseOut);
-
-    // Cleanup function
-    return () => {
-        trackingElement.removeEventListener('mousemove', handleMouseMove);
-        trackingElement.removeEventListener('mouseout', handleMouseOut);
-        if (cursor.parentElement) {
-            cursor.parentElement.removeChild(cursor);
-        }
-    };
-}
-
-
 
 
 
